@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="" description="">
+	<nodes>
+		<node id="0" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="CSV File Import" position="(263.0, 340.0)" />
+		<node id="1" name="Scatter Plot" qualified_name="Orange.widgets.visualize.owscatterplot.OWScatterPlot" project_name="Orange3" version="" title="Scatter Plot" position="(375.0, 351.0)" />
+		<node id="2" name="Distributions" qualified_name="Orange.widgets.visualize.owdistributions.OWDistributions" project_name="Orange3" version="" title="Distributions" position="(396.0, 506.0)" />
+		<node id="3" name="Select Columns" qualified_name="Orange.widgets.data.owselectcolumns.OWSelectAttributes" project_name="Orange3" version="" title="Select Columns" position="(334.0, 586.0)" />
+		<node id="4" name="Curve Fit" qualified_name="Orange.widgets.model.owcurvefit.OWCurveFit" project_name="Orange3" version="" title="Curve Fit" position="(475.0, 673.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+		<link id="2" source_node_id="0" sink_node_id="3" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+		<link id="3" source_node_id="3" sink_node_id="4" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': '/Users/scales/Datasets/guys.processed.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 1, 'value': 'Auto'}, {'start': 1, 'stop': 3, 'value': 'Skip'}, {'start': 3, 'stop': 4, 'value': 'Text'}, {'start': 4, 'stop': 6, 'value': 'Categorical'}, {'start': 6, 'stop': 7, 'value': 'Text'}, {'start': 7, 'stop': 8, 'value': 'Categorical'}, {'start': 8, 'stop': 10, 'value': 'Numeric'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': '/Users/scales/Datasets', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x96\x00\x00\x01k\x00\x00\x03\xe4\x00\x00\x02\xe2\x00\x00\x02\x96\x00\x00\x01\x87\x00\x00\x03\xe4\x00\x00\x02\xe2\x00\x00\x00\x00\x02\x00\x00\x00\x06\xc0\x00\x00\x02\x96\x00\x00\x01\x87\x00\x00\x03\xe4\x00\x00\x02\xe2', '__version__': 3}</properties>
+		<properties node_id="1" format="pickle">gASV9wMAAAAAAAB9lCiMC2F1dG9fY29tbWl0lIiMC2F1dG9fc2FtcGxllIiMEmNvbnRyb2xBcmVh
+VmlzaWJsZZSIjBNzYXZlZFdpZGdldEdlb21ldHJ5lENCAdnQywADAAAAAACQAAAAvwAABdsAAAOe
+AAAAkAAAANsAAAXbAAADngAAAAAAAAAABsAAAACQAAAA2wAABdsAAAOelIwJc2VsZWN0aW9ulE6M
+EXRvb2x0aXBfc2hvd3NfYWxslImMD3Zpc3VhbF9zZXR0aW5nc5R9lIwFZ3JhcGiUfZQojAthbHBo
+YV92YWx1ZZRLo4wNY2xhc3NfZGVuc2l0eZSJjBFqaXR0ZXJfY29udGludW91c5SIjAtqaXR0ZXJf
+c2l6ZZRLAIwTbGFiZWxfb25seV9zZWxlY3RlZJSJjBZvcnRob25vcm1hbF9yZWdyZXNzaW9ulImM
+C3BvaW50X3dpZHRolEsUjAxzaG93X2VsbGlwc2WUiYwJc2hvd19ncmlklImMC3Nob3dfbGVnZW5k
+lIiMDXNob3dfcmVnX2xpbmWUiHWMC19fdmVyc2lvbl9flEsFjBBjb250ZXh0X3NldHRpbmdzlF2U
+KIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFsdWVzlH2UKIwK
+YXR0cl9jb2xvcpSMCWxhbmd1YWdlc5RLZYaUjAphdHRyX2xhYmVslIwEbmFtZZRLZ4aUjAphdHRy
+X3NoYXBllIwIcG9zaXRpb26US2WGlIwJYXR0cl9zaXpllE5K/v///4aUjAZhdHRyX3iUjAZ3ZWln
+aHSUS2aGlIwGYXR0cl95lIwNcHJvZmlsZV92YWx1ZZRLZoaUaAp9lGgXSwV1jAphdHRyaWJ1dGVz
+lH2UKIwKVW5uYW1lZDogMJRLAowGZGVncmVllEsBjAhwb3NpdGlvbpRLAYwJbGFuZ3VhZ2VzlEsB
+jAZ3ZWlnaHSUSwKMDXByb2ZpbGVfdmFsdWWUSwJ1jAVtZXRhc5R9lCiMBG5hbWWUSwOMBWVtYWls
+lEsDdXViaBwpgZR9lChoH32UKIwKYXR0cl9jb2xvcpROSv7///+GlIwKYXR0cl9sYWJlbJROSv7/
+//+GlIwKYXR0cl9zaGFwZZROSv7///+GlIwJYXR0cl9zaXpllE5K/v///4aUjAZhdHRyX3iUjANY
+LjCUS2aGlIwGYXR0cl95lIwDWC43lEtlhpSMBWdyYXBolH2UaBdLBXVoM32UKGhLSwKMA1guNJRL
+AYwDWC41lEsBaE5LAYwDWC44lEsCjANYLjmUSwJ1aDt9lCiMA1guM5RLA4wDWC42lEsDdXViZXUu
+</properties>
+		<properties node_id="2" format="pickle">gASVMQIAAAAAAAB9lCiMCmF1dG9fYXBwbHmUiIwSY29udHJvbEFyZWFWaXNpYmxllIiMEGN1bXVs
+YXRpdmVfZGlzdHKUiYwTZml0dGVkX2Rpc3RyaWJ1dGlvbpRLAIwJaGlkZV9iYXJzlImMDWtkZV9z
+bW9vdGhpbmeUSwKME3NhdmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAAAAAG0AAACGAAAGWQAA
+A3gAAABtAAAAogAABlkAAAN4AAAAAAAAAAAGwAAAAG0AAACiAAAGWQAAA3iUjApzaG93X3Byb2Jz
+lImMDHNvcnRfYnlfZnJlcZSJjA9zdGFja2VkX2NvbHVtbnOUiIwLX192ZXJzaW9uX1+USwKMEGNv
+bnRleHRfc2V0dGluZ3OUXZSMFW9yYW5nZXdpZGdldC5zZXR0aW5nc5SMB0NvbnRleHSUk5QpgZR9
+lCiMBnZhbHVlc5R9lCiMBGN2YXKUjAlsYW5ndWFnZXOUS2WGlIwObnVtYmVyX29mX2JpbnOUSwBK
+/v///4aUjA1zZWxlY3RlZF9iYXJzlI+USv7///+GlIwDdmFylIwGZGVncmVllEtlhpRoDEsCdYwK
+YXR0cmlidXRlc5R9lCiMClVubmFtZWQ6IDCUSwJoH0sBjAhwb3NpdGlvbpRLAWgXSwGMBndlaWdo
+dJRLAowNcHJvZmlsZV92YWx1ZZRLAnWMBW1ldGFzlH2UKIwEbmFtZZRLA4wFZW1haWyUSwN1dWJh
+dS4=
+</properties>
+		<properties node_id="3" format="pickle">gASVNQIAAAAAAAB9lCiMC2F1dG9fY29tbWl0lIiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNpZ25v
+cmVfbmV3X2ZlYXR1cmVzlImME3NhdmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAAAAAfoAAAEp
+AAAEeQAAAyQAAAH6AAABRQAABHkAAAMkAAAAAAAAAAAGwAAAAfoAAAFFAAAEeQAAAySUjBJ1c2Vf
+aW5wdXRfZmVhdHVyZXOUiYwLX192ZXJzaW9uX1+USwGMEGNvbnRleHRfc2V0dGluZ3OUXZSMFW9y
+YW5nZXdpZGdldC5zZXR0aW5nc5SMB0NvbnRleHSUk5QpgZR9lCiMBnZhbHVlc5R9lCiMEWRvbWFp
+bl9yb2xlX2hpbnRzlH2UKIwKVW5uYW1lZDogMJRLAoaUjAlhdmFpbGFibGWUSwCGlIwGZGVncmVl
+lEsBhpSMCWF0dHJpYnV0ZZRLAIaUjAhwb3NpdGlvbpRLAYaUaBlLAYaUjAlsYW5ndWFnZXOUSwGG
+lGgZSwKGlIwNcHJvZmlsZV92YWx1ZZRLAoaUaBlLA4aUjAZ3ZWlnaHSUSwKGlIwFY2xhc3OUSwCG
+lIwEbmFtZZRLA4aUjARtZXRhlEsAhpSMBWVtYWlslEsDhpRoKksBhpR1Sv7///+GlGgHSwF1jAph
+dHRyaWJ1dGVzlH2UKGgTSwJoF0sBaBtLAWgeSwFoJEsCaCFLAnWMBW1ldGFzlH2UKGgoSwNoLEsD
+dXViYXUu
+</properties>
+		<properties node_id="4" format="literal">{'auto_apply': True, 'controlAreaVisible': True, 'expression': '', 'learner_name': '', 'parameters': {}, 'savedWidgetGeometry': None, '__version__': 1}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>

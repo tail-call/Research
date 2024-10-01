@@ -59,8 +59,14 @@ import torch.nn.functional as F
 
 class CustomBackwardFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, weight, bias=None):
-        ctx.save_for_backward(input, weight, bias)
+    def forward(
+        ctx,
+        p: float,
+        input: torch.Tensor,
+        weight: torch.Tensor,
+        bias: float = None
+    ):
+        ctx.save_for_backward(torch.scalar_tensor(p), input, weight, bias)
 
         output = input.mm(weight.t())
         if bias is not None:
@@ -70,11 +76,11 @@ class CustomBackwardFunction(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_output: torch.Tensor):
-        input, weight, bias = ctx.saved_tensors
+        p, input, weight, bias = ctx.saved_tensors
 
-        p = 0.5
         height = weight.size(0)
-        bernoulli_mask = torch.bernoulli(torch.ones(height) * p)
+        bernoulli_mask = torch.bernoulli(torch.ones(height) * p.item())
+ 
         diagonal_mask = torch.diag(bernoulli_mask)
 
         grad_output = grad_output.mm(diagonal_mask)
@@ -87,40 +93,7 @@ class CustomBackwardFunction(torch.autograd.Function):
         else:
             grad_bias = None
 
-        return grad_input, grad_weight, grad_bias
-
-    @staticmethod
-    def XXXbackward(ctx, grad_output: torch.Tensor):
-        # XXX Doesn't work
-
-        # TODO: проверять, на каком слое находимся.
-
-        input, weights, bias = ctx.saved_tensors
-
-        # XXX [0, 1] сделать внешним параметром линейного слоя!!!
-        p = 0.5
-
-        # XXX не очень хорошо
-        # нужно отключить передачу сигнала какому-то из нейронов
-        # взять размер одной из осей матрицы весов
-        # сгенерировать одномерный вектор
-        # и на эту диагональну матрицу (справа или слева?) умножить
-        # на матрицу весов
-        diag_matrix = torch.bernoulli(
-            torch.ones_like(weights) * 0.5
-        )
-        diag_matrix = torch.diag(diag_matrix)
-
-        grad_output = grad_output @ diag_matrix
-        grad_input = grad_output @ weights.t()
-        grad_weights = input.t() @ grad_output
-
-        if bias is not None and ctx.needs_input_grad[2]:
-            grad_bias = grad_output.sum(0)
-        else:
-            grad_bias = None
-
-        return grad_input, grad_weights, grad_bias
+        return None, grad_input, grad_weight, grad_bias
 
 class DigitRecognizer(nn.Module):
     def __init__(self):
@@ -155,9 +128,9 @@ class DigitRecognizerCustomBackward(nn.Module):
 
     def forward(self, x):
         x = self.flatten(x)
-        x = self.custom_backward(x, self.fc1.weight, self.fc1.bias)
+        x = self.custom_backward(0.6, x, self.fc1.weight, self.fc1.bias)
         x = F.relu(x)
-        x = self.custom_backward(x, self.fc2.weight, self.fc2.bias)
+        x = self.custom_backward(0.2, x, self.fc2.weight, self.fc2.bias)
         x = F.relu(x)
         x = self.fc3(x)
         return x

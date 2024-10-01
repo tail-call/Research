@@ -1,4 +1,4 @@
 # Managed by torchvision
 data/MNIST
 
-digit_recognizer.pth
+digit_recognizer*.pth

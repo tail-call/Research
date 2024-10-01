@@ -59,15 +59,28 @@ import torch.nn.functional as F
 
 class CustomBackwardFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, weight, bias) -> torch.Tensor:
+    def forward(ctx, input, weight, bias=None):
         ctx.save_for_backward(input, weight, bias)
-        return F.linear(input, weight, bias)
+
+        output = input.mm(weight.t())
+        if bias is not None:
+            output += bias
+
+        return output
 
     @staticmethod
     def backward(ctx, grad_output: torch.Tensor):
-        """Mock"""
-        input, weights, bias = ctx.saved_tensors
-        return input, weights, bias
+        input, weight, bias = ctx.saved_tensors
+
+        grad_input = grad_output.mm(weight)
+        grad_weight = grad_output.t().mm(input)
+
+        if bias is not None:
+            grad_bias = grad_output.sum(0)
+        else:
+            grad_bias = None
+
+        return grad_input, grad_weight, grad_bias
 
     @staticmethod
     def XXXbackward(ctx, grad_output: torch.Tensor):

@@ -72,6 +72,13 @@ class CustomBackwardFunction(torch.autograd.Function):
     def backward(ctx, grad_output: torch.Tensor):
         input, weight, bias = ctx.saved_tensors
 
+        p = 0.5
+        height = weight.size(0)
+        bernoulli_mask = torch.bernoulli(torch.ones(height) * p)
+        diagonal_mask = torch.diag(bernoulli_mask)
+
+        grad_output = grad_output.mm(diagonal_mask)
+
         grad_input = grad_output.mm(weight)
         grad_weight = grad_output.t().mm(input)
 

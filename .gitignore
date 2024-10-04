@@ -1,4 +1,8 @@
 # Managed by torchvision
 data/MNIST
 
-digit_recognizer*.pth
+# Let's not commit pytorch models
+*.pth
+
+# This one has been downloaded by hypertrain
+wisc_bc_data.csv

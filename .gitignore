@@ -4,5 +4,6 @@ data/MNIST
 # Let's not commit pytorch models
 *.pth
 
-# This one has been downloaded by hypertrain
+# These have been downloaded by hypertrain*.ipynb
 wisc_bc_data.csv
+car_evaluation.csv

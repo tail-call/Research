@@ -21,7 +21,11 @@
 # ## Данные
 
 # In[2]:
+import time
+from datetime import datetime
 
+datetime_now = datetime.now()
+time_now = time.time()
 
 import urllib.request
 import pandas as pd
@@ -31,6 +35,10 @@ from sklearn.model_selection import train_test_split
 
 import torch
 from torch.utils.data import TensorDataset
+
+import sys
+with open('log.txt', 'a') as file:
+    file.write(f'{datetime.now().isoformat()} A {sys.argv[0]} is {time.time() - time_now}\n')
 
 TEST_SIZE = 0.2
 RANDOM_STATE = 23432
@@ -227,19 +235,8 @@ def student_performance_factors_dataset() -> tuple[TensorDataset, TensorDataset]
 
 # In[6]:
 
-
-from dataclasses import dataclass
-
+from Dataset import Dataset
 from torch.utils.data import DataLoader
-
-@dataclass
-class Dataset:
-    features_count: int
-    classes_count: int
-    train_dataset: pd.DataFrame
-    test_dataset: pd.DataFrame
-    train_loader: DataLoader
-    test_loader: DataLoader
 
 def make_dataset(batch_size: int) -> Dataset:
     train_dataset, test_dataset = breast_cancer_dataset()
@@ -362,11 +359,16 @@ class CustomReLUBackwardFunction(torch.autograd.Function):
 
         grad_output = grad_output * (input > 0).float()
 
+        # У матриц ось 0 это Y
         height = grad_output.size(0)
         bernoulli_mask = torch.bernoulli(torch.ones(height) * (1 - p.item()))
         diagonal_mask = torch.diag(bernoulli_mask) / (1 - p.item())
 
-        grad_output =grad_output.mm(diagonal_mask)
+        diagonal_mask = diagonal_mask.unsqueeze(1).expand(-1, grad_output.size(1), -1)
+        diagonal_mask = diagonal_mask.permute(0, 2, 1)
+
+        grad_output = grad_output.unsqueeze(1) * diagonal_mask
+        grad_output = grad_output.sum(dim=1)
 
         return None, grad_output
 
@@ -552,11 +554,12 @@ def train(model: RegularNetwork, loader, epochs, criterion, optimizer):
             alpha=0.2
         )
 
+    # XXX Separate from training
     plt.figure(figsize=(10, 6))
     plot_mean_std('FC1 abs mean gradient', 'blue', fc1_dabs_mean, fc1_dabs_std)
     plot_mean_std('FC2 abs mean gradient', 'green', fc2_dabs_mean, fc2_dabs_std)
     plot_mean_std('FC3 abs mean gradient', 'red', fc3_dabs_mean, fc3_dabs_std)
-    plt.title('Absolute mean gradients of layers')
+    plt.title(f'Absolute mean gradients of layers: {model.__class__.__name__}')
     plt.legend()
     plt.show()
 
@@ -564,7 +567,7 @@ def train(model: RegularNetwork, loader, epochs, criterion, optimizer):
     plt.plot(X, running_losses, label='Running loss', color='orange')
     plt.xlabel('Iteration')
     plt.ylabel('Value')
-    plt.title('Validation loss across iteratioins')
+    plt.title(f'Validation loss across iterations: {model.__class__.__name__}')
     plt.legend()
     plt.show()
 
@@ -581,16 +584,16 @@ model1 = RegularNetwork(
 
 model1.apply(init_weights)
 
-train(
-    model=model1,
-    loader=dataset.train_loader,
-    epochs=EPOCHS,
-    criterion=criterion,
-    optimizer=optim.Adam(
-        model1.parameters(),
-        lr=LEARNING_RATE
-    )
-)
+# train(
+#     model=model1,
+#     loader=dataset.train_loader,
+#     epochs=EPOCHS,
+#     criterion=criterion,
+#     optimizer=optim.Adam(
+#         model1.parameters(),
+#         lr=LEARNING_RATE
+#     )
+# )
 
 torch.save(model1.state_dict(), 'model1.pth')
 
@@ -773,7 +776,7 @@ def evaluate_model(
 
         return pd.DataFrame(samples)
 
-def plot_evaluation_of_classification(df: pd.DataFrame):
+def plot_evaluation_of_classification(df: pd.DataFrame, title: str):
     plt.figure(figsize=(10, 6))
 
     plt.plot(df['noise_factor'], df['accuracy'], label='Accuracy', marker='o')
@@ -784,13 +787,14 @@ def plot_evaluation_of_classification(df: pd.DataFrame):
 
     plt.xlabel('Noise Factor')
     plt.ylabel('Metric Value')
-    plt.title('Metrics vs Noise Factor')
+    plt.title(f'Metrics vs Noise Factor: {title}')
     plt.legend()
 
     plt.grid(True, which="both", ls="--")
     plt.show()
 
-def plot_evaluation_of_regression(df: pd.DataFrame):
+# XXX split into two..
+def plot_evaluation_of_regression(df: pd.DataFrame, title: str):
     plt.figure(figsize=(10, 6))
 
     plt.plot(df['noise_factor'], df['mse'], label='Mean Square Error', marker='o')
@@ -799,7 +803,7 @@ def plot_evaluation_of_regression(df: pd.DataFrame):
 
     plt.xlabel('Noise Factor')
     plt.ylabel('Metric Value')
-    plt.title('Metrics vs Noise Factor')
+    plt.title(f'Metrics vs Noise Factor: {title}')
     plt.legend()
 
     plt.grid(True, which="both", ls="--")
@@ -814,7 +818,7 @@ def plot_evaluation_of_regression(df: pd.DataFrame):
 
     plt.xlabel('Noise Factor')
     plt.ylabel('Metric Value')
-    plt.title('Metrics vs Noise Factor')
+    plt.title(f'Metrics vs Noise Factor {title}')
     plt.legend()
 
     plt.grid(True, which="both", ls="--")
@@ -824,23 +828,14 @@ def plot_evaluation_of_regression(df: pd.DataFrame):
 # In[44]:
 
 
-plot_evaluation_of_regression(evaluate_model(
-    path='model1.pth',
-    constructor=RegularNetwork,
-    is_binary_classification=False,
-    is_regression=True,
-    inputs_count=19,
-    outputs_count=1
-))
-# evaluate_model(
+# plot_evaluation_of_regression(evaluate_model(
 #     path='model1.pth',
 #     constructor=RegularNetwork,
 #     is_binary_classification=False,
 #     is_regression=True,
 #     inputs_count=19,
 #     outputs_count=1
-# )
-
+# ), title='model1.pth')
 
 # In[45]:
 
@@ -852,5 +847,5 @@ plot_evaluation_of_regression(evaluate_model(
     is_regression=True,
     inputs_count=19,
     outputs_count=1
-))
+), title='model2.pth')
 

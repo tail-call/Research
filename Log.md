@@ -57,6 +57,8 @@ This error happens when Pylance is unable to find the package or module you're i
 - If you are importing a package that is already installed in a different interpreter or kernel, [select the correct interpreter](https://code.visualstudio.com/docs/python/environments#_select-and-activate-an-environment).
 - If you are working with an editable install and it is currently set up to use import hooks, consider switching to using `.pth` files that only contain file paths instead, to enhance compatibility and ensure smoother import behavior. [Learn more in the Pyright documentation](https://microsoft.github.io/pyright/#/import-resolution?id=editable-installs).
 
+> Мне кажется, установка Pylance решила все мои проблемы.
+
 ## Sun 20 Oct 
 
 ### [Значение расширения .pyi в Python и его содержимого](https://ru.stackoverflow.com/questions/1012021/%D0%97%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B0%D1%81%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%B8%D1%8F-pyi-%D0%B2-python-%D0%B8-%D0%B5%D0%B3%D0%BE-%D1%81%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B8%D0%BC%D0%BE%D0%B3%D0%BE)
@@ -174,6 +176,51 @@ torch.Size([2, 2, 1, 2])
 torch.Size([2, 2, 2])
 ```
 
+### `*.__class__.__name__.` в Python
+
+Эта красивая штука работает вообще для всего:
+
+```python
+>>> (1).__class__.__name__
+'int'
+>>> (None).__class__.__name__
+'NoneType'
+>>> (str).__class__.__name__
+'type'
+>>> (print).__class__.__name__
+'builtin_function_or_method'
+```
+
+Текст можно писать прямо в превью!
+
+- [PrinceXML](https://www.princexml.com/)
+- [Bibliographies and citations](https://shd101wyy.github.io/markdown-preview-enhanced/#/pandoc-bibliographies-and-citations)
+
+```yaml
+---
+title: "Important document"
+output: pdf_document
+bibliography: bibliography.bib
+# Или даже:
+bibliography: [bibliography1.bib, bibliography2.bib]
+---
+```
+
+Поддерживается:
+
+|Format|	File extension|
+|------|----------------|
+|BibLaTeX|	.bib|
+|BibTeX|	.bibtex|
+|Copac|	.copac|
+|CSL JSON|	.json|
+|CSL YAML|	.yaml|
+|EndNote|	.enl|
+|EndNote XML	|.xml|
+|ISI|	.wos|
+|MEDLINE	|.medline|
+|MODS|	.mods|
+|RIS|	.ris|
 
 ### Расширяем diagonal_mask
 

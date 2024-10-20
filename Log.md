@@ -222,6 +222,16 @@ bibliography: [bibliography1.bib, bibliography2.bib]
 |MODS|	.mods|
 |RIS|	.ris|
 
+### Converting back and forth between .py and .ipynb
+
+```bash
+(.venv) 127     JupyterNotebooksλ ~/.venv/bin/jupytext --to notebook hypertrain5.py 
+[jupytext] Reading hypertrain5.py in format py
+[jupytext] Writing hypertrain5.ipynb (destination file replaced [use --update to preserve cell outputs and ids])
+
+$ jupyter nbconvert --to script hypertrain5.ipynb
+```
+
 ### Расширяем diagonal_mask
 
 ```python

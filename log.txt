@@ -19,3 +19,6 @@ A /Users/scales/JupyterNotebooks/hypertrain5.py is 1.2620198726654053
 2024-10-23T17:20:43.715562 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 1.7032978534698486
 2024-10-23T17:41:17.250190 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 2.4112398624420166
 2024-10-23T17:42:06.090571 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 0.0008518695831298828
+2024-10-23T17:54:08.494162 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 0.0007491111755371094
+2024-10-23T17:55:22.427702 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 1.6970429420471191
+2024-10-23T17:55:59.309751 A /Users/scales/.pyenv/versions/3.12.3/lib/python3.12/site-packages/ipykernel_launcher.py is 0.0009429454803466797

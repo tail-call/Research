@@ -10,3 +10,6 @@ data/MNIST
 # These have been downloaded by hypertrain*.ipynb
 wisc_bc_data.csv
 car_evaluation.csv
+
+# Figures
+report/*.png

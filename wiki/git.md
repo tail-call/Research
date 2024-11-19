@@ -18,9 +18,11 @@ git apply
 ```
 
 **Flags**
-- `--stat` only output diffstat. Also try `--numstat` (shows number of added/deleted lines)
-- `--summary` only output information from <abbr title="Stuff like diff --git a/file1 b/file1, @@ -l,s +l,s @@ etc.">git diff extension headers</abbr>
-- `--check` only see if the patch is applicable
+- `--stat`: only output diffstat
+- `--numstat`: like `--stat` but easier to parse for scripts
+- `--summary`: only output information from <abbr title="Stuff like `diff --git a/file1 b/file1`, `@@ -l,s +l,s @@`, etc">git diff extension headers</abbr>
+- `--check`: only see if the patch is applicable
+- `--reject`: apply as much as possible, creates .rej files
 
 
 ## Remove untracked files

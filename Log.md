@@ -474,3 +474,67 @@ Vi mode, tab completion in python:
 python:bind -v 
 python:bind ^I rl_complete
 ```
+
+### [SageMath](https://www.sagemath.org/) | sagemath.org
+
+> SageMath is a free [open-source](https://github.com/sagemath/sage/) mathematics software system licensed under the GPL. It builds on top of many existing open-source packages: NumPy, SciPy, matplotlib, Sympy, [Maxima](https://maxima.sourceforge.io/), [GAP](https://www.gap-system.org/)¹, [FLINT](https://flintlib.org/)², R and [many more](https://doc.sagemath.org/html/en/reference/spkg/).  Access their combined power through a common, Python-based language or directly via interfaces or wrappers.
+>
+> ¹ Groups, Algorithms, Programming - A System for Computational Discrete Algebra
+> ² Fast Library for Number Theory
+
+* Latest release: [SageMath 10.4 - v2.4.0](https://github.com/3-manifolds/Sage_macOS/releases/tag/v2.4.0)
+
+### [List of resources for learning Category Theory](https://pythonrepo.com/repo/bgavran-Category_Theory_Resources-python-miscellaneous) | pythonrepo.com
+
+>  Last update: Jan 1, 2023
+
+Books:
+
+- [Seven Sketches in Compositionality: An Invitation to Applied Category Theory](https://arxiv.org/abs/1803.05316) by Fong, Spivak | arxiv.org
+- [Conceptual Mathematics: A First Introduction to Categories](https://s3.amazonaws.com/arena-attachments/325201/2ff932bf546d8985eb613fccf02b69c7.pdf) by Schanuel, Lawvere | s3.amazonaws.com, PDF
+- [Category theory for Programmers](https://github.com/hmemcpy/milewski-ctfp-pdf/) by Milewski | github.com/hmemcpy
+- [Polynomial Functors: A General Theory of Interaction](https://topos.site/poly-book.pdf) by Spivak, Niu | [topos.site](https://topos.site) - Topos Institute
+- [Draft of "Categorical Systems Theory"](http://davidjaz.com/Papers/DynamicalBook.pdf) by Jaz Myers | davidjaz.com
+- [Category theory for the Sciences](https://mitpress.mit.edu/books/category-theory-sciences) by Spivak | mitpress.mit.edu
+- [What is Applied Category Theory?](https://arxiv.org/abs/1809.05923) by Bradley | arxiv.org
+
+Video lectures:
+
+- [Bartosz Milewski's video lectures](https://www.youtube.com/watch?v=I8LbkfSSR58&list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_) | youtube.com
+- [The Catsters](https://www.youtube.com/user/TheCatsters) | youtube.com
+- [Applied Category Theory at Topos Institute](https://www.youtube.com/watch?v=UusLtx9fIjs&list=PLhgq-BqyZ7i5lOqOqqRiS0U5SwTmPpHQ5) | youtube.com
+- [Programming with Categories](https://www.youtube.com/watch?v=NUBEB9QlNCM) | youtube.com
+
+Blog posts:
+
+- [What is category theory, anyway?](https://www.math3ma.com/blog/what-is-category-theory-anyway) | math3ma.com
+- [On compositionality](https://pythonrepo.com/repo/bgavran-Category_Theory_Resources-python-miscellaneous) | pythonrepo.com
+- (examined below) [From design patterns to category theory](https://blog.ploeh.dk/2017/10/04/from-design-patterns-to-category-theory/) | blog.ploeh.dk
+
+### [From design patterns to category theory](https://blog.ploeh.dk/2017/10/04/from-design-patterns-to-category-theory/) | blog.ploeh.d
+
+> *How do you design good abstractions? By using abstractions that already exist.*
+
+> "Abstraction is the elimination of the irrelevant and the amplification of the essential"
+> — Robert C. Martin:
+
+> I don't know how to solve the *prior knowledge* requirement, other than to tell you to study.
+
+> I think a good abstraction should also be *intuitive*. What's the most intuitive abstractions ever? **Mathematics.** <!-- emphasis mine-->
+
+Links to cool maths:
+
+- [Differential topology](https://en.wikipedia.org/wiki/Differential_topology) | en.wikipedia.org
+- [Stochastic calculus](https://en.wikipedia.org/wiki/Stochastic_calculus) | en.wikipedia.org
+
+Interesting conjecture:
+
+> **Mathematics is** a big structure, but it's all **based on intuitive axioms**. Mathematics is intuitive. <!-- emphasis mine-->
+
+[Domain-Driven Design](http://amzn.to/WBCwx7) says:
+
+> …*Closure of Operations* ~~what?~~ leads to object models reminiscent of arithmetic.
+
+Like OOP, category theory is concerned with *objects*. Morphisms map objects to objects.
+
+**Suggestion.** Any mathematical object can be described in terms of category theory and analyzed as such. Therefore category theory is the universal tool for analyzing mathematical objects. Therefore, *very valuable* to learn.

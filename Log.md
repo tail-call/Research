@@ -2,7 +2,7 @@
 
 ## Fri 18 Oct
 
-### [Editing Python in Visual Studio Code](https://code.visualstudio.com/docs/python/editing)
+### [Editing Python in Visual Studio Code](https://code.visualstudio.com/docs/python/editing) | code.visualstudio.com/docs
 
 - [isort](https://marketplace.visualstudio.com/items?itemName=ms-python.isort),
   [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
@@ -46,7 +46,7 @@
 
 - Copilot ad
 
-### [importResolveFailure](https://code.visualstudio.com/docs/python/editing#_importresolvefailure)
+### [importResolveFailure](https://code.visualstudio.com/docs/python/editing#_importresolvefailure) | code.visualstudio.com/docs
 
 This error happens when Pylance is unable to find the package or module you're
 importing, nor its type stubs.
@@ -70,7 +70,7 @@ importing, nor its type stubs.
 
 ## Sun 20 Oct
 
-### [Значение расширения .pyi в Python и его содержимого](https://ru.stackoverflow.com/questions/1012021/%D0%97%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B0%D1%81%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%B8%D1%8F-pyi-%D0%B2-python-%D0%B8-%D0%B5%D0%B3%D0%BE-%D1%81%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B8%D0%BC%D0%BE%D0%B3%D0%BE)
+### [Значение расширения .pyi в Python и его содержимого](https://ru.stackoverflow.com/questions/1012021/%D0%97%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B0%D1%81%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%B8%D1%8F-pyi-%D0%B2-python-%D0%B8-%D0%B5%D0%B3%D0%BE-%D1%81%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B8%D0%BC%D0%BE%D0%B3%D0%BE) | ru.stackoverflow.com
 
 `.pyi` файлы - это стабы (stubs), их назначение и формат описаны в PEP 484. Эти
 файлы вообще никак не используются интерпретатором, их назначение -
@@ -123,7 +123,7 @@ tensor([0., 0., 0., 0., 0., 0., 0., 0.])
 tensor([0., 1., 0., 1., 0., 0., 0., 0.])
 ```
 
-### [Tensor.expand](https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html)
+### [Tensor.expand](https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html) | pytorch.org
 
 ```python
 Tensor.expand(*sizes) → Tensor
@@ -146,7 +146,7 @@ tensor([[ 1,  1,  1,  1],
         [ 3,  3,  3,  3]])
 ```
 
-### [torch.unsqueeze](https://pytorch.org/docs/stable/generated/torch.unsqueeze.html)
+### [torch.unsqueeze](https://pytorch.org/docs/stable/generated/torch.unsqueeze.html) | pytorch.org
 
 ```python
 torch.unsqueeze(input, dim) → Tensor
@@ -166,7 +166,7 @@ tensor([[ 1],
         [ 4]])
 ```
 
-### [torch.squeeze](https://pytorch.org/docs/stable/generated/torch.squeeze.html#torch.squeeze)
+### [torch.squeeze](https://pytorch.org/docs/stable/generated/torch.squeeze.html#torch.squeeze) | pytorch.org
 
 ```python
 torch.squeeze(input, dim: int | tuple[int, int, ...int] = None) → Tensor
@@ -217,8 +217,8 @@ torch.Size([2, 2, 2])
 
 Текст можно писать прямо в превью!
 
-- [PrinceXML](https://www.princexml.com/)
-- [Bibliographies and citations](https://shd101wyy.github.io/markdown-preview-enhanced/#/pandoc-bibliographies-and-citations)
+- [PrinceXML](https://www.princexml.com/) - "Convert HTML to PDF: USD $2000 per"
+- [Bibliographies and citations](https://shd101wyy.github.io/markdown-preview-enhanced/#/pandoc-bibliographies-and-citations) - Pandoc bibliographies and citations
 
 ```yaml
 ---
@@ -342,7 +342,7 @@ $$
 > 'Axes' object has no attribute 'xlabel'
 > 'Axes' object has no attribute 'xscale'
 
-### [matplotlib.axes.Axes](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes)
+### [matplotlib.axes.Axes](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes) | matplotlib.org
 
 ```python
 def matplotlib.axes.Axes(
@@ -373,7 +373,7 @@ def matplotlib.axes.Axes(
 
 Потому что скорее всего `.set_xscale()` мы будем вызывать на `fig`?
 
-### [matplotlib.pyplot.subplots](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html)
+### [matplotlib.pyplot.subplots](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html) | matplotlib.org
 
 ```python
 matplotlib.pyplot.subplots(
@@ -385,7 +385,7 @@ matplotlib.pyplot.subplots(
 ) -> (Figure, Axes)
 ```
 
-### [matplotlib.figure.Figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure)
+### [matplotlib.figure.Figure](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure) | matplotlib.org
 
 ```python
 class matplotlib.figure.Figure(
@@ -400,7 +400,7 @@ class matplotlib.figure.Figure(
 >
 > See [matplotlib.figure](https://matplotlib.org/stable/api/figure_api.html#module-matplotlib.figure) for an index of class methods.
 
-### [matplotlib.figure](https://matplotlib.org/stable/api/figure_api.html#module-matplotlib.figure)
+### [matplotlib.figure](https://matplotlib.org/stable/api/figure_api.html#module-matplotlib.figure) | matplotlib.org
 
 > 'Axes' object has no attribute 'xlabel'
 > 'Axes' object has no attribute 'xscale'
@@ -410,7 +410,7 @@ class matplotlib.figure.Figure(
 - Мне точно нужны [matplotlib.axes.Axes.set_xlabel](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xlabel.html#matplotlib.axes.Axes.set_xlabel)
   и [matplotlib.axes.Axes.set_xscale](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xscale.html#matplotlib.axes.Axes.set_xscale)
 
-### [matplotlib.artist](https://matplotlib.org/stable/api/artist_api.html#matplotlib.artist.Artist)
+### [matplotlib.artist](https://matplotlib.org/stable/api/artist_api.html#matplotlib.artist.Artist) | matplotlib.org
 
 ```
 Artist.Tick.XTick.ThetaTick
@@ -418,4 +418,59 @@ Artist.Tick.XTick.ThetaTick
       .Patch.FancyArrowPatch.ConnectionPatch
       :     .FancyBboxPatch
       .Collection
+```
+
+## Tue 19 Nov
+
+### [GridSearchCV](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) | scikit-learn.org
+
+CV means "cross-validation".
+
+```python
+class sklearn.model_selection.GridSearchCV(
+  # Must implement the scikit-learn estimator interface
+  estimator,
+   # { parametersName: list[parameterValue] } or a list
+   # of such dictionaries, in which case the grids spanned
+   # by each dictionary in the list are explored.
+   # This enables searching over any sequence of parameter settings.
+  param_grid,
+  *,
+  # If single score: string | (???) -> metricScore
+  # If multiple score: list[string],
+  #                or  tuple[string, ..., string],
+  #                or  (???) -> dict[metricName :to metricScore],
+  #                or  dict[metricName :to () -> metricScore] # I think so?
+  scoring=None,
+  n_jobs=None,
+  refit=True,
+  cv=None,
+  verbose=0,
+  pre_dispatch='2*n_jobs',
+  error_score=nan,
+  return_train_score=False
+)
+```
+
+I want :keywords in Python. Can I have them?
+
+Grid search workflow:
+
+![Grid search workflow diagram](https://scikit-learn.org/stable/_images/grid_search_workflow.png)
+
+## Wed 20 Nov
+
+### [GraniteMoe](https://huggingface.co/docs/transformers/model_doc/granitemoe) | huggingface.co/docs
+
+> Recent studies propose using small proxy models and small corpus to perform hyperparameter searches and transposing the optimal parameters to large models and large corpus.
+
+### [readline — GNU readline interface](https://docs.python.org/3/library/readline.html) |  docs.python.org
+
+> Readline keybindings may be configured via an initialization file, typically .inputrc in your home directory.
+
+Vi mode, tab completion in python:
+
+```inputrc
+python:bind -v 
+python:bind ^I rl_complete
 ```

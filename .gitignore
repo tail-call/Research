@@ -13,3 +13,9 @@ car_evaluation.csv
 
 # Figures
 report/*.png
+
+# Some reports
+report.json
+report copy.json
+report-eval.json
+report-loss.json

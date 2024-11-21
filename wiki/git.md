@@ -8,6 +8,13 @@ git - the stupid content tracker
 - **staging area** — where you prepare changes before committing
 - **working tree** — directory that contains project's files
 
+## Stash like a pro
+
+```
+git stash save "$(git branch): I added a bunch of prints and maybe disabled some code."
+git stash save "$(git branch): I tried to refactor but it didn't work out."
+```
+
 ## Apply a patch
 
 > **$ man 1 git-clean**

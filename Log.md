@@ -602,4 +602,28 @@ noun [mass noun]
 
 Reason forms new thoughts, logic validates them?
 
+### Experiment
+
+New report:
+
+> report['loss_AugmentedReLUNetwork_3_p0.99_N1'].length
+8720
+
+Old report:
+
+> report['loss_AugmentedReLUNetwork_3_p0.99_N1'].length
+4360
+
+```python
+plot_params = PlotParams(measurement='evaluate', dataset=1, metric='f1', p=0.01), Made a dataframe: Empty DataFrame
+Columns: [0.25, 0.75, mean]
+Index: []
+Index([], dtype='object')
+```
+
+Oh right, there's only loss metrics in my report... I need to run evaluations again. And everything will work. Silly me.
+
+$ mv report/report.json report-loss.json
+
+- [x] Run evaluations again
 

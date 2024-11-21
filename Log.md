@@ -538,3 +538,46 @@ Interesting conjecture:
 Like OOP, category theory is concerned with *objects*. Morphisms map objects to objects.
 
 **Suggestion.** Any mathematical object can be described in terms of category theory and analyzed as such. Therefore category theory is the universal tool for analyzing mathematical objects. Therefore, *very valuable* to learn.
+
+## Thu 21 Nov 
+
+### [Mathematical Thinking Isn’t What You Think It Is](https://www.quantamagazine.org/mathematical-thinking-isnt-what-you-think-it-is-20241118/) | quantamagazine.org
+
+> According to Bessis, however, the way math is taught in school emphasizes the logic-based part of this process, when the more important element is **intuition**. <!-- emphasis mine -->
+
+> Math should be thought of as a dialogue between the two: **between reason and instinct**, between language and abstraction. <!-- emphasis mine -->
+
+> The mathematician’s message is for everyone: **Look at what you can do if you don’t give up on your intuition**. <!-- emphasis mine -->
+
+> What we can learn from Descartes, Grothendieck and Thurston is that the nature of the **mathematical process is not what people think**. <!-- emphasis mine -->
+
+> At its core, Bessis says, mathematics is a game of back-and-forth between intuition and logic, instinct and reason.
+
+- intuition
+- logic
+- instinct
+- reason
+
+$$
+\mathrm{Mathematics} := \mathrm{Game}_{<BackAndForth>}(\mathrm{players:} I, L, i, R)
+$$
+
+Utility function is our understanding? It can be quantified. Let $U$ be level of understanding, whatever that means.
+
+Goal: improve mathematical intuition
+
+> ...**easy math is actually deep math that you’ve internalized.** <!-- emphasis mine -->
+
+> Math is hard. But life, whatever you do, is extremely hard.
+
+> Bessis is inspired by the practices of mathematical greats like Bill Thurston, Alexander Grothendieck and René Descartes.
+
+- Maybe research these people?
+
+> **Whenever you spot a disconnect between what your gut is telling you and what is supposed to be rational, it’s an important opportunity to understand something new.**
+
+> When you do math, you’re exposed to the human thought process in a way that is really pure. It’s not just about understanding things, but about understanding things in a very childish, deep, naïve, super clear, obvious way.
+
+What a great article, I award it 10/10⭐️
+
+It inspires us to do math

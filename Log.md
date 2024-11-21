@@ -581,3 +581,25 @@ Goal: improve mathematical intuition
 What a great article, I award it 10/10⭐️
 
 It inspires us to do math
+
+### Thinking
+
+But what is the difference between logic and reason?
+
+**logic** | ˈlɒdʒɪk |
+noun [mass noun]
+- reasoning conducted or assessed according to strict principles of validity: experience is a better guide to this than deductive logic | the logic of the argument is faulty.
+- a particular system or codification of the principles of proof and inference: Aristotelian logic.
+- the systematic use of symbolic and mathematical techniques to determine the forms of valid deductive argument.
+- the quality of being justifiable by reason: there seemed to be a lack of logic in his remarks.
+- (the logic of) the course of action suggested by or following as a necessary consequence of: the logic of private competition was to replace small firms by larger firms.
+
+**reason** | ˈriːzn |
+noun [mass noun]
+- the power of the mind to think, understand, and form judgements logically: there is a close connection between reason and emotion.
+- what is right, practical, or possible; common sense: people are willing, within reason, to pay for schooling.
+- (one's reason) one's sanity: she is in danger of losing her reason.
+
+Reason forms new thoughts, logic validates them?
+
+

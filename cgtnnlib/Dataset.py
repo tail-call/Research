@@ -8,9 +8,13 @@ from .ExperimentParameters import ExperimentParameters
 class Dataset:
     name: str
     number: int
-    features_count: int
+    # XXX can be derived from DatasetData
     classes_count: int
     data: DatasetData
+    
+    @property
+    def features_count(self) -> int:
+        return self.data.train_dataset[1][0].shape[0]
 
     def model_a_path(self, params: ExperimentParameters) -> str:
         # XXX PthPath config variable?

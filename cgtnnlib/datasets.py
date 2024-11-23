@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from .LearningTask import CLASSIFICATION_TASK, REGRESSION_TASK
+from .LearningTask import regression_task, classification_task
 from .DatasetData import DatasetData
 from .Dataset import Dataset
 
@@ -69,12 +69,12 @@ def breast_cancer_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
+            y_dtype=classification_task.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
+            y_dtype=classification_task.dtype
         )
     )
 
@@ -139,12 +139,12 @@ def car_evaluation_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
+            y_dtype=classification_task.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
+            y_dtype=classification_task.dtype
         )
     )
 
@@ -213,12 +213,12 @@ def student_performance_factors_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=REGRESSION_TASK.dtype
+            y_dtype=regression_task.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=REGRESSION_TASK.dtype
+            y_dtype=regression_task.dtype
         )
     )
 
@@ -237,7 +237,6 @@ def make_dataset1(
     return Dataset(
         name='wisc_bc_data.csv',
         number=1,
-        features_count=train_dataset[1][0].shape[0],
         classes_count=2,
         data=DatasetData(
             train_dataset=train_dataset,
@@ -268,7 +267,6 @@ def make_dataset2(
     return Dataset(
         name='car_evaluation.csv',
         number=2,
-        features_count=train_dataset[1][0].shape[0],
         classes_count=4,
         data=DatasetData(
             train_dataset=train_dataset,
@@ -291,6 +289,7 @@ def make_dataset3(
     test_size: int,
     random_state: int
 ) -> Dataset:
+    # XXX Use lazy evaluation?..
     train_dataset, test_dataset = student_performance_factors_dataset(
         test_size=test_size,
         random_state=random_state,
@@ -299,7 +298,6 @@ def make_dataset3(
     return Dataset(
         name='StudentPerformanceFactors.csv',
         number=3,
-        features_count=train_dataset[1][0].shape[0],
         classes_count=1,
         data=DatasetData(
             train_dataset=train_dataset,

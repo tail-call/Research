@@ -11,11 +11,12 @@ class LearningTask:
     dtype: torch.dtype
 
 
-CLASSIFICATION_TASK = LearningTask(
+classification_task = LearningTask(
     criterion=nn.CrossEntropyLoss(),
-    dtype=torch.long
+    dtype=torch.long,
 )
-REGRESSION_TASK = LearningTask(
+
+regression_task = LearningTask(
     criterion=nn.MSELoss(),
-    dtype=torch.float
+    dtype=torch.float,
 )

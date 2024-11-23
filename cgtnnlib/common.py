@@ -152,6 +152,7 @@ def train(
 def save_plot(filename_without_extension: str) -> str:
     path = os.path.join(REPORT_DIR, f'{filename_without_extension}.png')
     # plt.savefig(path)
+    print(f"NOTE: save_plot called but no figure will be saved. Path: {path}")
     plt.close()
     return path
 
@@ -180,7 +181,7 @@ def iterate_experiment_parameters():
 ## 1.4.2 Report generation
 
 
-def append_to_report(label, data):
+def append_to_report(label: str, data: dict):
     report_data[label] = data
 
 def save_report():

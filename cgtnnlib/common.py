@@ -10,7 +10,6 @@
 import os
 import json
 
-from dataclasses import dataclass
 
 from IPython.display import clear_output
 
@@ -26,17 +25,18 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
+
+from cgtnnlib.RegularNetwork import RegularNetwork
 
 
 from .Dataset import Dataset
 from .ExperimentParameters import ExperimentParameters
 from .datasets import make_dataset1, make_dataset2, make_dataset3
 
+
 ## 1.4.-1 Configuration
 
-# XXX 
-DRY_RUN = True
+DRY_RUN = False
 
 REPORT_DIR = "report/"
 
@@ -191,245 +191,7 @@ def save_report():
     print(f"Отчёт сохранён в {path}")
     
 
-
-
-## 1.4.9 Custom layers
-
-class CustomBackwardFunction(torch.autograd.Function):
-    """
-    Переопределённая функция для линейного слоя.
-    """
-    @staticmethod
-    def forward(
-        ctx,
-        p: float,
-        input: torch.Tensor,
-        weight: torch.Tensor,
-        bias: float = None
-    ):
-        ctx.save_for_backward(torch.scalar_tensor(p), input, weight, bias)
-
-        output = input.mm(weight.t())
-        if bias is not None:
-            output += bias
-
-        return output
-
-    @staticmethod
-    def backward(ctx, grad_output: torch.Tensor):
-        p, input, weight, bias = ctx.saved_tensors
-
-        height = weight.size(0)
-        bernoulli_mask = torch.bernoulli(torch.ones(height) * (1 - p.item()))
- 
-        diagonal_mask = torch.diag(bernoulli_mask) / (1 - p.item())
-
-        grad_output = grad_output.mm(diagonal_mask)
-
-        grad_input = grad_output.mm(weight)
-        grad_weight = grad_output.t().mm(input)
-
-        if bias is not None:
-            grad_bias = grad_output.sum(0)
-        else:
-            grad_bias = None
-
-        return None, grad_input, grad_weight, grad_bias
-
-
-class CustomReLUBackwardFunction(torch.autograd.Function):
-    """
-    Переопределённая функция для слоя ReLU.
-    """
-    @staticmethod
-    def forward(ctx, p: float, input: torch.Tensor):
-        ctx.save_for_backward(torch.scalar_tensor(p), input)
-        return F.relu(input)
-
-    @staticmethod
-    def backward(ctx, grad_output: torch.Tensor):
-        p, input = ctx.saved_tensors
-
-        grad_output = grad_output * (input > 0).float()
-
-        # У матриц ось 0 это Y
-        height = grad_output.size(0)
-        bernoulli_mask = torch.bernoulli(torch.ones(height) * (1 - p.item()))
-        diagonal_mask = torch.diag(bernoulli_mask) / (1 - p.item())
-
-        diagonal_mask = diagonal_mask.unsqueeze(1).expand(-1, grad_output.size(1), -1)
-        diagonal_mask = diagonal_mask.permute(0, 2, 1)
-
-        grad_output = grad_output.unsqueeze(1) * diagonal_mask
-        grad_output = grad_output.sum(dim=1)
-
-        return None, grad_output
-
-    
-class CustomReLUFunction(torch.autograd.Function):
-    @staticmethod
-    def forward(ctx, input, p: float):
-        ctx.save_for_backward(input, torch.scalar_tensor(p))
-        return input.clamp(min=0)
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        input, p, = ctx.saved_tensors
-        grad_input = grad_output.clone()
-        grad_input[input <= 0] = 0
-
-        # У матриц ось 0 это Y (Добавляем аргумент device=grad_output.device для указания устройства для создания тензора grad_input)
-        # XXX 2. grad_input.size(0) на grad_input.size(1)
-        bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))
-        # XXX 1. Попробовать запустить без деления
-        diagonal_mask = torch.diag(bernoulli_mask) # / (1 - p.item()+1e-5)
-
-        # Перемещаем diagonal_mask на Cuda
-        diagonal_mask = diagonal_mask.to(grad_output.device)
-        
-        # Multiply grad_input with the diagonal matrix
-        # XXX 2. Заменить на grad_input @ diagonal_mask
-        grad_input = diagonal_mask @ grad_input
-        
-        return grad_input, None
-    
-    
-class CustomReLULayer(torch.nn.Module):
-    def __init__(self, p: float):
-        super(CustomReLULayer, self).__init__()
-        self.p = p
-        self.custom_relu_backward = CustomReLUFunction.apply
-
-    def forward(self, x):
-        return self.custom_relu_backward(x, self.p)
-
-
-## 1.4.10 Neural networks
-
-class RegularNetwork(nn.Module):
-    """
-    Нейросеть с обычными линейными слоями. Параметр `p` игнорируется.
-    """
-    def __init__(self, inputs_count: int, outputs_count: int, p: float):
-        super(RegularNetwork, self).__init__()
-
-        self.flatten = nn.Flatten()
-
-        self.fc1 = nn.Linear(inputs_count, 32 * 32)
-        self.fc2 = nn.Linear(32 * 32, 32 * 32)
-        self.fc3 = nn.Linear(32 * 32, outputs_count)
-    
-    @property
-    def inputs_count(self):
-        return self.fc1.in_features
-    
-    @property
-    def outputs_count(self):
-        return self.fc3.out_features
-
-    def forward(self, x):
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.fc2(x)
-        x = F.relu(x)
-        x = self.fc3(x)
-        return x
-    
-    def __str__(self):
-        return f"{self.__class__.__name__}(inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
-
-
-class AugmentedLinearNetwork(nn.Module):
-    """
-    Нейросеть с переопределённой функцией распространения ошибки
-    для линейных слоёв.
-    """
-    def __init__(self, inputs_count: int, outputs_count: int, p: float):
-        super(AugmentedReLUNetwork, self).__init__()
-
-        self.flatten = nn.Flatten()
-        self.p = p
-
-        self.fc1 = nn.Linear(inputs_count, 32 * 32)
-        self.fc2 = nn.Linear(32 * 32, 32 * 32)
-        self.fc3 = nn.Linear(32 * 32, outputs_count)
-
-        self.custom_backward = CustomBackwardFunction.apply
-        
-        self.p = p
-    
-    @property
-    def inputs_count(self):
-        return self.fc1.in_features
-    
-    @property
-    def outputs_count(self):
-        return self.fc3.out_features
-
-    def forward(self, x):
-        x = self.flatten(x)
-        x = self.custom_backward(self.p, x, self.fc1.weight, self.fc1.bias)
-        x = F.relu(x)
-        x = self.custom_backward(self.p, x, self.fc2.weight, self.fc2.bias)
-        x = F.relu(x)
-        x = self.fc3(x)
-        return x
-    
-    def __str__(self):
-        return f"{self.__class__.__name__}(p: {self.p}, inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
-    
-# XXX 3. Расширить внутренний слой??? 
-
-class AugmentedReLUNetwork(nn.Module):
-    """
-    Нейросеть с переопределённой функцией распространения ошибки
-    для функции активации.
-    """
-    def __init__(self, inputs_count: int, outputs_count: int, p: float):
-        super(AugmentedReLUNetwork, self).__init__()
-
-        self.flatten = nn.Flatten()
-
-        self.fc1 = nn.Linear(inputs_count, 32 * 32)
-        self.fc2 = nn.Linear(32 * 32, 32 * 32)
-        self.fc3 = nn.Linear(32 * 32, outputs_count)
-
-        self.custom_relu1 = CustomReLULayer(p)
-        self.custom_relu2 = CustomReLULayer(p)
-        
-        self.p = p
-    
-    @property
-    def inputs_count(self):
-        return self.fc1.in_features
-    
-    @property
-    def outputs_count(self):
-        return self.fc3.out_features
-
-    def forward(self, x):
-        x = self.flatten(x)
-        x = self.fc1(x)
-        x = self.custom_relu1(x)
-        x = self.fc2(x)
-        x = self.custom_relu2(x)
-        x = self.fc3(x)
-        return x
-
-    def __str__(self):
-        return f"{self.__class__.__name__}(p: {self.p}, inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
-
-
 ## 1.4.11 Evaluation
-
-@dataclass
-class EvaluationSubplots:
-    accuracy_ax: Axes
-    f1_ax: Axes
-    roc_auc_ax: Axes
-    mse_ax: Axes
-    r2_ax: Axes
 
 def positive_probs_from(probs: torch.Tensor) -> list:
     return np.array(probs)[:, 0]

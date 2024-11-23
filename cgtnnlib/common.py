@@ -62,7 +62,7 @@ class TrainingParameters:
     model_b_path: str
     loss_curve_plot_col_index: int
 
-def init_weights(m):
+def init_weights(m: nn.Module):
     if isinstance(m, nn.Linear):
         init.xavier_uniform_(m.weight)
         m.bias.data.fill_(0.01)
@@ -80,6 +80,9 @@ def print_progress(
     print(
         f'N={iteration} #{dataset_number} p={p} E{epoch}/{total_epochs} S{total_samples} Loss={running_loss / 100:.4f}'
     )
+   
+# XXX 
+DRY_RUN = True
 
 def train(
     model, 
@@ -90,6 +93,10 @@ def train(
     optimizer
 ) -> list[float]:
     running_losses: list[float] = []
+    
+    if DRY_RUN:
+        print(f"NOTE: Training model {model} in dry run mode. No changes to weights will be applied. An array of {epochs} -1s is generated for running_losses.")
+        return [-1 for _ in range(epochs)]
 
     for epoch in range(epochs):
         running_loss = 0.0
@@ -100,18 +107,13 @@ def train(
             inputs, labels = inputs.to(device), labels.to(device)
             
             optimizer.zero_grad()
-
             outputs = model(inputs)
-
-            outputs =  outputs.to(device)
-
+            outputs = outputs.to(device)
             loss = criterion(outputs, labels)
             loss.backward()
-
             optimizer.step()
-
             running_loss += loss.item()
-
+            
             if i % PRINT_TRAINING_SPAN == 0:
                 print_progress(
                     p=experiment_parameters.p,
@@ -122,6 +124,7 @@ def train(
                     running_loss=running_loss,
                     dataset_number=dataset.number
                 )
+
 
             running_losses.append(running_loss)
             running_loss = 0.0
@@ -593,6 +596,14 @@ class RegularNetwork(nn.Module):
         self.fc1 = nn.Linear(inputs_count, 32 * 32)
         self.fc2 = nn.Linear(32 * 32, 32 * 32)
         self.fc3 = nn.Linear(32 * 32, outputs_count)
+    
+    @property
+    def inputs_count(self):
+        return self.fc1.in_features
+    
+    @property
+    def outputs_count(self):
+        return self.fc3.out_features
 
     def forward(self, x):
         x = self.flatten(x)
@@ -602,6 +613,9 @@ class RegularNetwork(nn.Module):
         x = F.relu(x)
         x = self.fc3(x)
         return x
+    
+    def __str__(self):
+        return f"{self.__class__.__name__}(inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
 
 
 class AugmentedLinearNetwork(nn.Module):
@@ -620,6 +634,16 @@ class AugmentedLinearNetwork(nn.Module):
         self.fc3 = nn.Linear(32 * 32, outputs_count)
 
         self.custom_backward = CustomBackwardFunction.apply
+        
+        self.p = p
+    
+    @property
+    def inputs_count(self):
+        return self.fc1.in_features
+    
+    @property
+    def outputs_count(self):
+        return self.fc3.out_features
 
     def forward(self, x):
         x = self.flatten(x)
@@ -629,6 +653,9 @@ class AugmentedLinearNetwork(nn.Module):
         x = F.relu(x)
         x = self.fc3(x)
         return x
+    
+    def __str__(self):
+        return f"{self.__class__.__name__}(p: {self.p}, inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
     
 # XXX 3. Расширить внутренний слой??? 
 
@@ -648,6 +675,16 @@ class AugmentedReLUNetwork(nn.Module):
 
         self.custom_relu1 = CustomReLULayer(p)
         self.custom_relu2 = CustomReLULayer(p)
+        
+        self.p = p
+    
+    @property
+    def inputs_count(self):
+        return self.fc1.in_features
+    
+    @property
+    def outputs_count(self):
+        return self.fc3.out_features
 
     def forward(self, x):
         x = self.flatten(x)
@@ -658,3 +695,5 @@ class AugmentedReLUNetwork(nn.Module):
         x = self.fc3(x)
         return x
 
+    def __str__(self):
+        return f"{self.__class__.__name__}(p: {self.p}, inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"

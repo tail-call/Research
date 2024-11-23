@@ -25,6 +25,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 import matplotlib.pyplot as plt
 
+from .Dataset import Dataset
+from .DatasetData import DatasetData
+from .ExperimentParameters import ExperimentParameters
+
 ## 1.4.-1,5 Enable CUDA
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -46,35 +50,6 @@ NOISE_SAMPLES_COUNT = 50
 NOISE_FACTORS = [
     x * 2/NOISE_SAMPLES_COUNT for x in range(NOISE_SAMPLES_COUNT)
 ]
-
-## 1.4.0 Training related dataclasses
-
-@dataclass
-class ExperimentParameters:
-    iteration: int
-    p: float
-
-@dataclass
-class DatasetData:
-    train_dataset: pd.DataFrame
-    test_dataset: pd.DataFrame
-    train_loader: DataLoader
-    test_loader: DataLoader
-
-@dataclass
-class Dataset:
-    name: str
-    number: int
-    features_count: int
-    classes_count: int
-    data: DatasetData
-
-    def model_a_path(self, params: ExperimentParameters) -> str:
-        # XXX PthPath config variable?
-        return f'pth/model-{self.number}A-c-P{params.p}_N{params.iteration}.pth'
-
-    def model_b_path(self, params: ExperimentParameters) -> str:
-        return f'pth/model-{self.number}B-c-P{params.p}_N{params.iteration}.pth'
 
 ## 1.4.1 Training library
 

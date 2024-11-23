@@ -630,3 +630,27 @@ $ mv report/report.json report-loss.json
 ### [cat-theory]
 
 > Если воспринимать категории как "обобщённые частично упорядоченные множества", то монада – это "обобщённый оператор замыкания".
+
+## Sat 23 Nov
+
+### [‘Thirsty’ ChatGPT uses four times more water than previously thought](https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr) | thetimes.com
+
+ChatGPT uses a lot of water.
+
+### [The Lens Library](https://lens.github.io/) | lens.github.io
+
+It's a Haskell library for lenses.
+
+> This package provides families of [lenses](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Type.hs), [isomorphisms](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Iso.hs), [folds](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Fold.hs), [traversals](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Traversal.hs), [getters](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Getter.hs), and [setters](https://github.com/ekmett/lens/blob/master/src/Control/Lens/Setter.hs).
+
+### [The Lens Library FAQ](https://github.com/ekmett/lens/wiki/FAQ) | github.com/ekmett/lens/wiki
+
+> One goal of `lens` has been to provide a consistent vocabulary that lets you access and work with pure data of any sort, while retaining the ability to be able to reason about your code with laws.
+
+It looks like the world wants me to use Haskell.
+
+### [mtl: Monad classes for transformers, using functional dependencies](https://hackage.haskell.org/package/mtl) | hackage.haskell.org
+
+A typical Haskell package.
+
+Highlight: `Control.Monad.Trans.Identity.IdentityT`

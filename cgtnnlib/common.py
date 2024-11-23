@@ -1,5 +1,6 @@
-## COMMON LIBRARY v.0.4
+## COMMON LIBRARY v.0.5 WIP
 ## Created at Sat 23 Nov 2024
+## v.0.5 - improved LearningTask interface
 ## v.0.4 - datasets module
 ## v.0.3 - more classes within their own files
 ## v.0.2 - evaluation declarations

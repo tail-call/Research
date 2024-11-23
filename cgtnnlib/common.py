@@ -1,5 +1,6 @@
-## COMMON LIBRARY v.0.5
+## COMMON LIBRARY v.0.6
 ## Created at Sat 23 Nov 2024
+## v.0.6 - even more classes within their own files
 ## v.0.5 - improved LearningTask interface
 ## v.0.4 - datasets module
 ## v.0.3 - more classes within their own files
@@ -9,7 +10,6 @@
 
 import os
 import json
-
 
 from IPython.display import clear_output
 
@@ -27,7 +27,6 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 from cgtnnlib.RegularNetwork import RegularNetwork
-
 
 from .Dataset import Dataset
 from .ExperimentParameters import ExperimentParameters

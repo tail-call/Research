@@ -1,5 +1,6 @@
-## COMMON LIBRARY v.0.1
+## COMMON LIBRARY v.0.2
 ## Created at Sat 23 Nov 2024
+## v.0.2 - evaluation declarations
 
 ## 1.4.-2 Imports
 
@@ -12,9 +13,11 @@ from typing import List, Tuple
 
 from IPython.display import clear_output
 
+import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score, f1_score, r2_score, mean_squared_error
 
 import torch
 import torch.nn as nn
@@ -24,6 +27,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
 
 from .Dataset import Dataset
 from .DatasetData import DatasetData
@@ -34,6 +38,9 @@ from .ExperimentParameters import ExperimentParameters
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 ## 1.4.-1 Configuration
+
+# XXX 
+DRY_RUN = True
 
 REPORT_DIR = "report/"
 
@@ -50,6 +57,7 @@ NOISE_SAMPLES_COUNT = 50
 NOISE_FACTORS = [
     x * 2/NOISE_SAMPLES_COUNT for x in range(NOISE_SAMPLES_COUNT)
 ]
+
 
 ## 1.4.1 Training library
 
@@ -80,9 +88,6 @@ def print_progress(
     print(
         f'N={iteration} #{dataset_number} p={p} E{epoch}/{total_epochs} S{total_samples} Loss={running_loss / 100:.4f}'
     )
-   
-# XXX 
-DRY_RUN = True
 
 def train(
     model, 
@@ -515,6 +520,7 @@ class CustomBackwardFunction(torch.autograd.Function):
 
         return None, grad_input, grad_weight, grad_bias
 
+
 class CustomReLUBackwardFunction(torch.autograd.Function):
     """
     Переопределённая функция для слоя ReLU.
@@ -697,3 +703,189 @@ class AugmentedReLUNetwork(nn.Module):
 
     def __str__(self):
         return f"{self.__class__.__name__}(p: {self.p}, inputs_count: {self.inputs_count}, outputs_count: {self.outputs_count})"
+
+
+## 1.4.11 Evaluation
+
+@dataclass
+class EvaluationSubplots:
+    accuracy_ax: Axes
+    f1_ax: Axes
+    roc_auc_ax: Axes
+    mse_ax: Axes
+    r2_ax: Axes
+
+def positive_probs_from(probs: torch.Tensor) -> list:
+    return np.array(probs)[:, 0]
+
+def eval_accuracy_f1_rocauc(
+    evaluated_model:RegularNetwork,
+    dataset: Dataset,
+    noise_factor: float,
+    is_binary_classification: bool,
+) -> tuple[float, float, float]:
+    evaluated_model.eval()
+    correct = 0
+    total = 0
+    all_labels = []
+    all_predictions = []
+    all_probs = []
+
+    with torch.no_grad():
+        for inputs, labels in dataset.data.test_loader:
+            outputs = evaluated_model(
+                inputs + torch.randn(inputs.shape) * noise_factor
+            )
+            probs = F.softmax(outputs, dim=1)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
+            all_probs.extend(probs.cpu().numpy())
+
+    accuracy = correct / total
+    f1 = f1_score(all_labels, all_predictions, average='weighted')
+
+    if is_binary_classification:
+        all_probs = np.array(all_probs)[:, 0]
+
+    roc_auc = roc_auc_score(all_labels, all_probs, multi_class='ovr')
+
+    return float(accuracy), float(f1), float(roc_auc)
+
+def eval_r2_mse(
+    evaluated_model: RegularNetwork,
+    dataset: Dataset,
+    noise_factor: float,
+) -> tuple[float, float]:
+    evaluated_model.eval()
+    all_labels = []
+    all_predictions = []
+
+    with torch.no_grad():
+        for inputs, labels in dataset.data.test_loader:
+            noisy_inputs = inputs + torch.randn(inputs.shape) * noise_factor
+            outputs = evaluated_model(noisy_inputs)
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(outputs.cpu().numpy())
+
+    all_labels = np.array(all_labels)
+    all_predictions = np.array(all_predictions)
+
+    r2 = r2_score(all_labels, all_predictions)
+    mse = mean_squared_error(all_labels, all_predictions)
+
+    return float(r2), float(mse)
+
+def evaluate_regression_model(
+    evaluated_model: RegularNetwork,
+    dataset: Dataset,
+    report_key: str,
+)-> pd.DataFrame:
+    samples = {
+        'noise_factor': NOISE_FACTORS,
+        'r2': [],
+        'mse': [],
+    }
+
+    for noise_factor in NOISE_FACTORS:
+        r2, mse = eval_r2_mse(
+            evaluated_model=evaluated_model,
+            dataset=dataset,
+            noise_factor=noise_factor,
+        )
+
+        samples['r2'].append(r2)
+        samples['mse'].append(mse)
+
+    append_to_report(report_key, samples)
+
+    return pd.DataFrame(samples)
+
+def evaluate_classification_model(
+    evaluated_model: RegularNetwork,
+    dataset: Dataset,
+    report_key: str,
+    is_binary_classification: bool,
+)-> pd.DataFrame:
+    samples = {
+        'noise_factor': NOISE_FACTORS,
+        'accuracy': [],
+        'f1': [],
+        'roc_auc': [],
+    }
+
+    for noise_factor in NOISE_FACTORS:
+        accuracy, f1, roc_auc = eval_accuracy_f1_rocauc(
+            evaluated_model=evaluated_model,
+            dataset=dataset,
+            noise_factor=noise_factor,
+            is_binary_classification=is_binary_classification,
+        )
+
+        samples['accuracy'].append(accuracy)
+        samples['f1'].append(f1)
+        samples['roc_auc'].append(roc_auc)
+
+    append_to_report(report_key, samples)
+
+    return pd.DataFrame(samples)
+
+def plot_evaluation_of_classification(
+    df: pd.DataFrame,
+    accuracy_ax,
+    f1_ax,
+    roc_auc_ax,
+    title: str,
+):
+    accuracy_ax.plot(df['noise_factor'], df['accuracy'], label='Accuracy', marker='o')
+    # accuracy_ax.set_xscale('log')
+    accuracy_ax.set_xlabel('Noise Factor')
+    accuracy_ax.set_ylabel('Metric Value')
+    # XXX ???
+    accuracy_ax.set_title(f'{title}')
+    accuracy_ax.legend()
+    accuracy_ax.grid(True, which="both", ls="--")
+
+    f1_ax.plot(df['noise_factor'], df['f1'], label='F1 Score', marker='o')
+    # f1_ax.set_xscale('log')
+    f1_ax.set_xlabel('Noise Factor')
+    f1_ax.set_ylabel('Metric Value')
+    # XXX ???
+    f1_ax.set_title(f'{title}')
+    f1_ax.legend()
+    f1_ax.grid(True, which="both", ls="--")
+
+    roc_auc_ax.plot(df['noise_factor'], df['roc_auc'], label='ROC AUC', marker='o')
+    # axs[2].set_xscale('log')
+    roc_auc_ax.set_xlabel('Noise Factor')
+    roc_auc_ax.set_ylabel('Metric Value')
+    # XXX ???
+    roc_auc_ax.set_title(f'{title}')
+    roc_auc_ax.legend()
+    roc_auc_ax.grid(True, which="both", ls="--")
+    
+
+def plot_evaluation_of_regression(
+    df: pd.DataFrame,
+    mse_ax,
+    r2_ax,
+    title: str
+):
+    mse_ax.plot(df['noise_factor'], df['mse'], label='Mean Square Error', marker='o')
+    # mse_ax.set_xscale('log')
+    mse_ax.set_xlabel('Noise Factor')
+    mse_ax.set_ylabel('Metric Value')
+    mse_ax.set_title(f'{title}')
+    mse_ax.legend()
+    mse_ax.grid(True, which="both", ls="--")
+
+    r2_ax.plot(df['noise_factor'], df['r2'], label='R^2', marker='o')
+    # r2_ax.set_xscale('log')
+    r2_ax.set_xlabel('Noise Factor')
+    r2_ax.set_ylabel('Metric Value')
+    r2_ax.set_title(f'{title}')
+    r2_ax.legend()
+    r2_ax.grid(True, which="both", ls="--")

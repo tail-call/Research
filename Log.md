@@ -654,3 +654,11 @@ It looks like the world wants me to use Haskell.
 A typical Haskell package.
 
 Highlight: `Control.Monad.Trans.Identity.IdentityT`
+
+## Sun 24 Nov
+
+### [Partial thoughts on Deep Learning and Category Theory](https://medium.com/@maxbendick/partial-thoughts-on-deep-learning-and-category-theory-bd5cc704fbed) | medium.com/@maxbendick
+
+Layers are morphisms between tensors of dirrent types.
+
+[cgt]: "Open games are... the morphisms of a symmetric monoidal category."

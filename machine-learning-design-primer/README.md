@@ -11,6 +11,8 @@ Some helpful notes for Machine Learning System Design Interview preparation, whi
 
 ## The main resources 
 
+[Rock the Behavioral Interview](https://leetcode.com/explore/interview/card/leapai/)
+
 [Facebook Field Guide to Machine Learning](https://research.facebook.com/blog/2018/05/the-facebook-field-guide-to-machine-learning-video-series/)
 
 [CS 329S: Machine Learning Systems Design, Stanford, Winter 2022](https://stanford-cs329s.github.io/)

@@ -289,7 +289,7 @@ def make_dataset3(
     test_size: int,
     random_state: int
 ) -> Dataset:
-    # XXX Use lazy evaluation?..
+    # ::: Use lazy evaluation?..
     train_dataset, test_dataset = student_performance_factors_dataset(
         test_size=test_size,
         random_state=random_state,

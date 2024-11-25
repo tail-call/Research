@@ -321,7 +321,7 @@ def plot_evaluation_of_classification(
     # accuracy_ax.set_xscale('log')
     accuracy_ax.set_xlabel('Noise Factor')
     accuracy_ax.set_ylabel('Metric Value')
-    # XXX ???
+    # ???
     accuracy_ax.set_title(f'{title}')
     accuracy_ax.legend()
     accuracy_ax.grid(True, which="both", ls="--")
@@ -330,7 +330,7 @@ def plot_evaluation_of_classification(
     # f1_ax.set_xscale('log')
     f1_ax.set_xlabel('Noise Factor')
     f1_ax.set_ylabel('Metric Value')
-    # XXX ???
+    # ???
     f1_ax.set_title(f'{title}')
     f1_ax.legend()
     f1_ax.grid(True, which="both", ls="--")
@@ -339,7 +339,7 @@ def plot_evaluation_of_classification(
     # axs[2].set_xscale('log')
     roc_auc_ax.set_xlabel('Noise Factor')
     roc_auc_ax.set_ylabel('Metric Value')
-    # XXX ???
+    # ???
     roc_auc_ax.set_title(f'{title}')
     roc_auc_ax.legend()
     roc_auc_ax.grid(True, which="both", ls="--")

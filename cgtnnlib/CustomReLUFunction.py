@@ -16,7 +16,7 @@ class CustomReLUFunction(torch.autograd.Function):
         # У матриц ось 0 это Y (Добавляем аргумент device=grad_output.device для указания устройства для создания тензора grad_input)
         # XXX 2. grad_input.size(0) на grad_input.size(1)
         bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))
-        # XXX 1. Попробовать запустить без деления
+        # YYY 1. Попробовать запустить без деления
         diagonal_mask = torch.diag(bernoulli_mask) # / (1 - p.item()+1e-5)
 
         # Перемещаем diagonal_mask на Cuda

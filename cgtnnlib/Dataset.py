@@ -8,7 +8,7 @@ from .ExperimentParameters import ExperimentParameters
 class Dataset:
     name: str
     number: int
-    # XXX can be derived from DatasetData
+    # ::: can be derived from DatasetData
     classes_count: int
     data: DatasetData
     
@@ -17,7 +17,7 @@ class Dataset:
         return self.data.train_dataset[1][0].shape[0]
 
     def model_a_path(self, params: ExperimentParameters) -> str:
-        # XXX PthPath config variable?
+        # ::: PthPath config variable?
         return f'pth/model-{self.number}A-c-P{params.p}_N{params.iteration}.pth'
 
     def model_b_path(self, params: ExperimentParameters) -> str:

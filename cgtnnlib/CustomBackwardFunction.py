@@ -1,5 +1,10 @@
 import torch
 
+from cgtnnlib.MockCtx import MockCtx
+
+def pprint(*args):
+    # print(*args)
+    return
 
 class CustomBackwardFunction(torch.autograd.Function):
     """
@@ -7,11 +12,11 @@ class CustomBackwardFunction(torch.autograd.Function):
     """
     @staticmethod
     def forward(
-        ctx,
+        ctx: MockCtx,
         p: float,
         input: torch.Tensor,
         weight: torch.Tensor,
-        bias: float = None
+        bias: float | None = None
     ):
         ctx.save_for_backward(torch.scalar_tensor(p), input, weight, bias)
 
@@ -22,7 +27,7 @@ class CustomBackwardFunction(torch.autograd.Function):
         return output
 
     @staticmethod
-    def backward(ctx, grad_output: torch.Tensor):
+    def backward(ctx: MockCtx, grad_output: torch.Tensor):
         p, input, weight, bias = ctx.saved_tensors
 
         height = weight.size(0)
@@ -39,5 +44,6 @@ class CustomBackwardFunction(torch.autograd.Function):
             grad_bias = grad_output.sum(0)
         else:
             grad_bias = None
-
+            
+        # XXX ??? Seems like we have to pass None here?
         return None, grad_input, grad_weight, grad_bias

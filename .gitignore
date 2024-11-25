@@ -19,3 +19,9 @@ report.json
 report copy.json
 report-eval.json
 report-loss.json
+
+# Jupyter checkpoints
+.ipynb_checkpoints
+
+# macOS
+.DS_Store

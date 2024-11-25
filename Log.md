@@ -662,3 +662,18 @@ Highlight: `Control.Monad.Trans.Identity.IdentityT`
 Layers are morphisms between tensors of dirrent types.
 
 [cgt]: "Open games are... the morphisms of a symmetric monoidal category."
+
+### [100pmlb]
+
+Supervised learning tasks:
+- classification
+- regression
+
+Unsupervised learning tasks:
+- clustering
+- dimensionality reduction
+- outlier detection
+
+Semi-supervised learning: many of the samples are unlabelled, but it should improve the quality of the model
+
+Reinforcement learning: goal is long-term, decision-making is sequential

@@ -1,15 +1,24 @@
 import torch
 
+class MockCtx:
+    @property
+    def saved_tensors(self):
+        return (self.input, self.tensor)
+        
+    def save_for_backward(self, input, tensor):
+        self.input = input
+        self.tensor = tensor
 
 class CustomReLUFunction(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, input, p: float):
+    def forward(ctx, input: torch.Tensor, p: float):
         ctx.save_for_backward(input, torch.scalar_tensor(p))
+        # ReLU is happening in clamp
         return input.clamp(min=0)
 
     @staticmethod
     def backward(ctx, grad_output):
-        input, p, = ctx.saved_tensors
+        input, p = ctx.saved_tensors
         grad_input = grad_output.clone()
         grad_input[input <= 0] = 0
 
@@ -27,3 +36,4 @@ class CustomReLUFunction(torch.autograd.Function):
         grad_input = diagonal_mask @ grad_input
 
         return grad_input, None
+    

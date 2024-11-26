@@ -1,5 +1,6 @@
-## Training module v.0.2wip
+## Training module v.0.2
 ## Created at Tue 26 Nov 2024
+## Updated at Tue 27 Nov 2024
 
 from typing import Iterable
 import torch

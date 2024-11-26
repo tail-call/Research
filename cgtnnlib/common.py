@@ -1,5 +1,6 @@
-## COMMON LIBRARY v.0.7wip
+## COMMON LIBRARY v.0.7
 ## Created at Sat 23 Nov 2024
+## Updated at Wed 27 Nov 2024
 ## v.0.7 - training.py
 ## v.0.6 - even more classes within their own files
 ## v.0.5 - improved LearningTask interface

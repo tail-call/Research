@@ -1,3 +1,6 @@
+## CustomReluFunction v.0.1
+## Created at Sat 23 Nov 2024
+
 import torch
 
 def pprint(*args):

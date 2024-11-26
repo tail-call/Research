@@ -83,7 +83,7 @@ def breast_cancer_dataset(
 ## 1.4.6 Dataset #2
 
 def car_evaluation_dataset(
-    test_size: int,
+    test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
     df = download_csv(
@@ -152,7 +152,7 @@ def car_evaluation_dataset(
 ## 1.4.7 Dataset #3
 
 def student_performance_factors_dataset(
-    test_size: int,
+    test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
     df = pd.read_csv('data/StudentPerformanceFactors.csv')
@@ -257,7 +257,7 @@ def make_dataset1(
 
 def make_dataset2(
     batch_size: int,
-    test_size: int,
+    test_size: float,
     random_state: int
 ) -> Dataset:
     train_dataset, test_dataset = car_evaluation_dataset(
@@ -287,7 +287,7 @@ def make_dataset2(
 
 def make_dataset3(
     batch_size: int,
-    test_size: int,
+    test_size: float,
     random_state: int
 ) -> Dataset:
     # ::: Use lazy evaluation?..

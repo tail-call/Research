@@ -43,7 +43,6 @@ BATCH_SIZE = 12
 EPOCHS = 20
 LEARNING_RATE = 0.00011
 PP = [0, 0.01, 0.05, 0.5, 0.9, 0.95, 0.99]
-PRINT_TRAINING_SPAN = 500
 
 NOISE_SAMPLES_COUNT = 50
 NOISE_FACTORS = [
@@ -59,33 +58,14 @@ report_data = {}
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-DATASETS = [
-    make_dataset1(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE
-    ),
-    make_dataset2(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE,
-    ),
-    make_dataset3(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE,
-    ),
-]
-
 def init_weights(m: nn.Module):
     if isinstance(m, nn.Linear):
         init.xavier_uniform_(m.weight)
         m.bias.data.fill_(0.01)
 
-def save_plot(filename_without_extension: str) -> str:
+def get_pointless_path(filename_without_extension: str) -> str:
     path = os.path.join(REPORT_DIR, f'{filename_without_extension}.png')
-    # plt.savefig(path)
-    print(f"NOTE: save_plot called but no figure will be saved. Path: {path}")
+    print(f"NOTE: get_pointless_path called but no figure will be saved. Path: {path}")
     plt.close()
     return path
 
@@ -301,6 +281,35 @@ def plot_evaluation_of_regression(
     r2_ax.legend()
     r2_ax.grid(True, which="both", ls="--")
 
+DATASETS: list[Dataset] = [
+    make_dataset1(
+        batch_size=12,
+        test_size=TEST_SAMPLE_SIZE,
+        random_state=RANDOM_STATE
+    ),
+    make_dataset2(
+        batch_size=12,
+        test_size=TEST_SAMPLE_SIZE,
+        random_state=RANDOM_STATE,
+    ),
+    make_dataset3(
+        batch_size=12,
+        test_size=TEST_SAMPLE_SIZE,
+        random_state=RANDOM_STATE,
+    ),
+]
+
+def train_main():
+    train_all_models(
+        datasets=DATASETS,
+        epochs=EPOCHS,
+        learning_rate=LEARNING_RATE,
+        dry_run=DRY_RUN,
+    )
+
+def evaluate_main():
+    print('TODO: evaluate_main()')
+
 if __name__ == "__main__":
     print('# common.py')
     print('')
@@ -309,4 +318,5 @@ if __name__ == "__main__":
         print(f"{dataset.number}) {dataset.name}: {dataset.features_count} features, {dataset.classes_count} classes")
 
 if __name__ == '__main__':
-    train_all_models()
+    train_main()
+    evaluate_main()

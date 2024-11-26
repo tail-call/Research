@@ -1,4 +1,4 @@
-## Training module v.0.1
+## Training module v.0.2wip
 ## Created at Tue 26 Nov 2024
 
 import torch.optim as optim
@@ -12,7 +12,9 @@ from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.LearningTask import classification_task, regression_task
 # from cgtnnlib.RegularNetwork import RegularNetwork
 from cgtnnlib.TrainingParameters import TrainingParameters
-from cgtnnlib.common import DATASETS, DRY_RUN, EPOCHS, LEARNING_RATE, PRINT_TRAINING_SPAN, append_to_report, device, init_weights, iterate_experiment_parameters, plot_loss_curve, save_plot
+from cgtnnlib.common import append_to_report, device, init_weights, iterate_experiment_parameters, plot_loss_curve, get_pointless_path
+
+PRINT_TRAINING_SPAN = 500
 
 def print_progress(
     p: float,
@@ -34,11 +36,12 @@ def train_model(
     epochs: int,
     experiment_parameters: ExperimentParameters,
     criterion,
-    optimizer
+    optimizer,
+    dry_run: bool,
 ) -> list[float]:
     running_losses: list[float] = []
 
-    if DRY_RUN:
+    if dry_run:
         print(f"NOTE: Training model {model} in dry run mode. No changes to weights will be applied. An array of {epochs} -1s is generated for running_losses.")
         return [-1 for _ in range(epochs)]
 
@@ -76,34 +79,39 @@ def train_model(
     return running_losses
 
 
-def train_all_models():
+def train_all_models(
+    datasets: list[Dataset],
+    epochs: int,
+    learning_rate: float,
+    dry_run: bool,
+):
     for experiment_params in iterate_experiment_parameters():
         # fig, axs = plt.subplots(2, 3, sharey='col', figsize=(10, 12))
         # fig.set_size_inches(35, 20)
 
         for training_params in [
             TrainingParameters(
-                dataset=DATASETS[0],
+                dataset=datasets[0],
                 criterion=classification_task.criterion,
                 experiment_params=experiment_params,
-                model_a_path=DATASETS[0].model_a_path(experiment_params),
-                model_b_path=DATASETS[0].model_b_path(experiment_params),
+                model_a_path=datasets[0].model_a_path(experiment_params),
+                model_b_path=datasets[0].model_b_path(experiment_params),
                 loss_curve_plot_col_index=0,
             ),
             TrainingParameters(
-                dataset=DATASETS[1],
+                dataset=datasets[1],
                 criterion=classification_task.criterion,
                 experiment_params=experiment_params,
-                model_a_path=DATASETS[1].model_a_path(experiment_params),
-                model_b_path=DATASETS[1].model_b_path(experiment_params),
+                model_a_path=datasets[1].model_a_path(experiment_params),
+                model_b_path=datasets[1].model_b_path(experiment_params),
                 loss_curve_plot_col_index=1,
             ),
             TrainingParameters(
-                dataset=DATASETS[2],
+                dataset=datasets[2],
                 criterion=regression_task.criterion,
                 experiment_params=experiment_params,
-                model_a_path=DATASETS[2].model_a_path(experiment_params),
-                model_b_path=DATASETS[2].model_b_path(experiment_params),
+                model_a_path=datasets[2].model_a_path(experiment_params),
+                model_b_path=datasets[2].model_b_path(experiment_params),
                 loss_curve_plot_col_index=2,
             )
         ]:
@@ -131,13 +139,14 @@ def train_all_models():
                 running_losses = train_model(
                     model=model,
                     dataset=training_params.dataset,
-                    epochs=EPOCHS,
+                    epochs=epochs,
                     experiment_parameters=experiment_params,
                     criterion=training_params.criterion,
                     optimizer=optim.Adam(
                         model.parameters(),
-                        lr=LEARNING_RATE
-                    )
+                        lr=learning_rate,
+                    ),
+                    dry_run=dry_run,
                 )
 
                 torch.save(model.state_dict(), name)
@@ -146,17 +155,17 @@ def train_all_models():
 
                 append_to_report(report_key, running_losses)
 
-                col = training_params.loss_curve_plot_col_index
+                # XXX Unneeded?
+                # col = training_params.loss_curve_plot_col_index
+                # plot_loss_curve(
+                #     ax=axs[row, col],
+                #     model_name=model.__class__.__name__,
+                #     dataset_name=training_params.dataset.name,
+                #     dataset_number=training_params.dataset.number,
+                #     running_losses=running_losses,
+                #     p=experiment_params.p,
+                #     iteration=experiment_params.iteration
+                # )
 
-                plot_loss_curve(
-                    ax=axs[row, col],
-                    model_name=model.__class__.__name__,
-                    dataset_name=training_params.dataset.name,
-                    dataset_number=training_params.dataset.number,
-                    running_losses=running_losses,
-                    p=experiment_params.p,
-                    iteration=experiment_params.iteration
-                )
-
-        path = save_plot(f'loss__p{experiment_params.p}_N{experiment_params.iteration}')
+        path = get_pointless_path(f'loss__p{experiment_params.p}_N{experiment_params.iteration}')
         print('train_main(): path = ', path)

@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
 import torch.utils.data
-import pandas as pd
+from torch.utils.data import TensorDataset
 
 
 @dataclass
 class DatasetData:
-    train_dataset: pd.DataFrame
-    test_dataset: pd.DataFrame
+    train_dataset: TensorDataset
+    test_dataset: TensorDataset
     train_loader: torch.utils.data.DataLoader
     test_loader: torch.utils.data.DataLoader

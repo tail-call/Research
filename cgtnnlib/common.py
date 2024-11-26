@@ -10,7 +10,6 @@
 ## 1.4.-2 Imports
 
 import os
-import json
 
 import numpy as np
 import pandas as pd
@@ -18,13 +17,12 @@ import pandas as pd
 from sklearn.metrics import roc_auc_score, f1_score, r2_score, mean_squared_error
 
 import torch
-import torch.nn as nn
-import torch.nn.init as init
 import torch.nn.functional as F
 
 import matplotlib.pyplot as plt
 
 from cgtnnlib.RegularNetwork import RegularNetwork
+from cgtnnlib.Report import Report
 from cgtnnlib.training import train_all_models
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
@@ -54,14 +52,7 @@ NOISE_FACTORS = [
 if not os.path.exists(REPORT_DIR):
     os.makedirs(REPORT_DIR)
 
-report_data = {}
-
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-def init_weights(m: nn.Module):
-    if isinstance(m, nn.Linear):
-        init.xavier_uniform_(m.weight)
-        m.bias.data.fill_(0.01)
+report = Report(dir=REPORT_DIR)
 
 def get_pointless_path(filename_without_extension: str) -> str:
     path = os.path.join(REPORT_DIR, f'{filename_without_extension}.png')
@@ -90,19 +81,6 @@ def iterate_experiment_parameters():
     for iteration in range(0, ITERATIONS):
         for p in PP:
             yield ExperimentParameters(iteration, p)
-
-## 1.4.2 Report generation
-
-
-def append_to_report(label: str, data: dict):
-    report_data[label] = data
-
-def save_report():
-    path = os.path.join(REPORT_DIR, 'report.json')
-    with open(path, 'w') as file:
-        json.dump(report_data, file, indent=4)
-    print(f"Отчёт сохранён в {path}")
-    
 
 ## 1.4.11 Evaluation
 
@@ -191,7 +169,7 @@ def evaluate_regression_model(
         samples['r2'].append(r2)
         samples['mse'].append(mse)
 
-    append_to_report(report_key, samples)
+    report.append(report_key, samples)
 
     return pd.DataFrame(samples)
 
@@ -220,7 +198,7 @@ def evaluate_classification_model(
         samples['f1'].append(f1)
         samples['roc_auc'].append(roc_auc)
 
-    append_to_report(report_key, samples)
+    report.append(report_key, samples)
 
     return pd.DataFrame(samples)
 
@@ -304,7 +282,9 @@ def train_main():
         datasets=DATASETS,
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
+        report=report,
         dry_run=DRY_RUN,
+        experiment_params_iter=iterate_experiment_parameters()
     )
 
 def evaluate_main():

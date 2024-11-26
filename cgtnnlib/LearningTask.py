@@ -8,7 +8,7 @@ import torch.nn as nn
 @dataclass
 class LearningTask:
     name: str
-    criterion: object
+    criterion: nn.CrossEntropyLoss | nn.MSELoss
     dtype: torch.dtype
 
 

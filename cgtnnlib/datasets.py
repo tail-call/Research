@@ -10,9 +10,9 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from .LearningTask import regression_task, classification_task
-from .DatasetData import DatasetData
-from .Dataset import Dataset
+from cgtnnlib.LearningTask import regression_task, classification_task
+from cgtnnlib.DatasetData import DatasetData
+from cgtnnlib.Dataset import Dataset
 
 def download_csv(
     url: str,
@@ -47,7 +47,7 @@ def tensor_dataset_from_dataframe(
 ## 1.4.5 Dataset #1
 
 def breast_cancer_dataset(
-    test_size: int,
+    test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
     df = download_csv(
@@ -227,7 +227,7 @@ def student_performance_factors_dataset(
 
 def make_dataset1(
     batch_size: int,
-    test_size: int,
+    test_size: float,
     random_state: int
 ) -> Dataset:
     train_dataset, test_dataset = breast_cancer_dataset(
@@ -245,12 +245,12 @@ def make_dataset1(
             train_loader=DataLoader(
                 train_dataset,
                 batch_size=batch_size,
-                shuffle=True
+                shuffle=True,
             ),
             test_loader=DataLoader(
                 test_dataset,
                 batch_size=batch_size,
-                shuffle=False
+                shuffle=False,
             )
         )
     )

@@ -1,8 +1,11 @@
 ## Training module v.0.2wip
 ## Created at Tue 26 Nov 2024
 
-import torch.optim as optim
+from typing import Iterable
 import torch
+import torch.nn as nn
+import torch.nn.init as init
+import torch.optim as optim
 
 from IPython.display import clear_output
 
@@ -11,8 +14,9 @@ from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.LearningTask import classification_task, regression_task
 # from cgtnnlib.RegularNetwork import RegularNetwork
+from cgtnnlib.Report import Report
 from cgtnnlib.TrainingParameters import TrainingParameters
-from cgtnnlib.common import append_to_report, device, init_weights, iterate_experiment_parameters, plot_loss_curve, get_pointless_path
+from cgtnnlib.torch_device import torch_device
 
 PRINT_TRAINING_SPAN = 500
 
@@ -29,6 +33,12 @@ def print_progress(
     print(
         f'N={iteration} #{dataset_number} p={p} E{epoch}/{total_epochs} S{total_samples} Loss={running_loss / 100:.4f}'
     )
+
+def init_weights(m: nn.Module):
+    if isinstance(m, nn.Linear):
+        init.xavier_uniform_(m.weight)
+        m.bias.data.fill_(0.01)
+
 
 def train_model(
     model,
@@ -51,11 +61,11 @@ def train_model(
         model.train()
 
         for i, (inputs, labels) in enumerate(dataset.data.train_loader):
-            inputs, labels = inputs.to(device), labels.to(device)
+            inputs, labels = inputs.to(torch_device), labels.to(torch_device)
 
             optimizer.zero_grad()
             outputs = model(inputs)
-            outputs = outputs.to(device)
+            outputs = outputs.to(torch_device)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -83,9 +93,11 @@ def train_all_models(
     datasets: list[Dataset],
     epochs: int,
     learning_rate: float,
+    report: Report,
     dry_run: bool,
+    experiment_params_iter: Iterable[ExperimentParameters]
 ):
-    for experiment_params in iterate_experiment_parameters():
+    for experiment_params in experiment_params_iter:
         # fig, axs = plt.subplots(2, 3, sharey='col', figsize=(10, 12))
         # fig.set_size_inches(35, 20)
 
@@ -134,7 +146,7 @@ def train_all_models(
             ]:
                 model.apply(init_weights)
 
-                model = model.to(device)
+                model = model.to(torch_device)
 
                 running_losses = train_model(
                     model=model,
@@ -153,7 +165,7 @@ def train_all_models(
 
                 report_key = f'loss_{type(model).__name__}_{training_params.dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
 
-                append_to_report(report_key, running_losses)
+                report.append(report_key, running_losses)
 
                 # XXX Unneeded?
                 # col = training_params.loss_curve_plot_col_index
@@ -167,5 +179,5 @@ def train_all_models(
                 #     iteration=experiment_params.iteration
                 # )
 
-        path = get_pointless_path(f'loss__p{experiment_params.p}_N{experiment_params.iteration}')
+        path = f'loss__p{experiment_params.p}_N{experiment_params.iteration}'
         print('train_main(): path = ', path)

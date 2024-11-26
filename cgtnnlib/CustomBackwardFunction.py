@@ -1,6 +1,7 @@
 import torch
 
-from cgtnnlib.MockCtx import MockCtx
+from .MockCtx import MockCtx
+
 
 def pprint(*args):
     # print(*args)
@@ -27,13 +28,15 @@ class CustomBackwardFunction(torch.autograd.Function):
         return output
 
     @staticmethod
-    def backward(ctx: MockCtx, grad_output: torch.Tensor):
+    def backward(ctx: MockCtx, *grad_outputs):
         p, input, weight, bias = ctx.saved_tensors
 
         height = weight.size(0)
         bernoulli_mask = torch.bernoulli(torch.ones(height) * (1 - p.item()))
 
         diagonal_mask = torch.diag(bernoulli_mask) / (1 - p.item())
+        
+        grad_output = grad_outputs[0]
 
         grad_output = grad_output.mm(diagonal_mask)
 
@@ -45,5 +48,5 @@ class CustomBackwardFunction(torch.autograd.Function):
         else:
             grad_bias = None
             
-        # XXX ??? Seems like we have to pass None here?
+        # Yes, None
         return None, grad_input, grad_weight, grad_bias

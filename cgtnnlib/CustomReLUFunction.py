@@ -1,21 +1,5 @@
 import torch
 
-class MockCtx:
-    """
-    Mock version of torch context, for debuggning.
-    """
-    @property
-    def saved_tensors(self):
-        return (self.input, self.p)
-
-    def save_for_backward(
-        self,
-        input: torch.Tensor,
-        p: torch.Tensor,
-    ):
-        self.input = input
-        self.p = p
-
 def pprint(*args):
     # print(*args)
     return
@@ -38,9 +22,11 @@ class CustomReLUFunction(torch.autograd.Function):
         pprint(grad_input)
 
         # У матриц ось 0 это Y (Добавляем аргумент device=grad_output.device для указания устройства для создания тензора grad_input)
-        # XXX 2. grad_input.size(0) на grad_input.size(1)
-        bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))
-        pprint(">>> bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))")
+        # YYY 2. grad_input.size(0) на grad_input.size(1)
+        bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(1), device=grad_output.device) * (1 - p.item()))
+        pprint(">>> bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(1), device=grad_output.device) * (1 - p.item()))")
+        #bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))
+        #pprint(">>> bernoulli_mask = torch.bernoulli(torch.ones(grad_input.size(0), device=grad_output.device) * (1 - p.item()))")
         pprint(">>> bernoulli_mask")
         pprint(bernoulli_mask)
 
@@ -55,9 +41,10 @@ class CustomReLUFunction(torch.autograd.Function):
         diagonal_mask = diagonal_mask.to(grad_output.device)
 
         # Multiply grad_input with the diagonal matrix
-        # XXX 2. Заменить на grad_input @ diagonal_mask
-        grad_input = diagonal_mask @ grad_input
-        pprint(">>> grad_input = diagonal_mask @ grad_input")
+        # YYY 2. Заменить на grad_input @ diagonal_mask
+        #grad_input = diagonal_mask @ grad_input
+        grad_input = grad_input @ diagonal_mask
+        pprint(">>> grad_input = grad_input @ diagonal_mask")
         pprint(">>> grad_input")
         pprint(grad_input)
 

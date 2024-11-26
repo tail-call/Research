@@ -1,4 +1,5 @@
-## Dataset utilities
+## Dataset utilities v.0.1
+## Created at Tue 26 Nov 2024
 
 import os
 import urllib.request
@@ -16,7 +17,7 @@ from .Dataset import Dataset
 def download_csv(
     url: str,
     saved_name: str,
-    features: list[str] = None
+    features: list[str] | None = None
 ) -> pd.DataFrame:
     data_dir = 'data'
     os.makedirs(data_dir, exist_ok=True)
@@ -32,7 +33,7 @@ def download_csv(
 def tensor_dataset_from_dataframe(
     df: pd.DataFrame,
     target: str,
-    y_dtype: type
+    y_dtype: torch.dtype
 ) -> TensorDataset:
     X = df.drop(columns=[target]).values
     y = df[target].values

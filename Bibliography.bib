@@ -1,12 +1,69 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% https://bibdesk.sourceforge.io/
 
-%% Created for Flickering Glow at 2024-11-26 10:52:54 +0700 
+%% Created for Flickering Glow at 2024-11-27 14:23:14 +0700 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@article{Varga2017,
+	abstract = {Regularizing the gradient norm of the output of a neural network with respect to its inputs is a powerful technique, rediscovered several times. This paper presents evidence that gradient regularization can consistently improve classification accuracy on vision tasks, using modern deep neural networks, especially when the amount of training data is small. We introduce our regularizers as members of a broader class of Jacobian-based regularizers. We demonstrate empirically on real and synthetic data that the learning process leads to gradients controlled beyond the training points, and results in solutions that generalize well.},
+	author = {D{\'a}niel Varga and Adri{\'a}n Csisz{\'a}rik and Zsolt Zombori},
+	date-added = {2024-11-27 14:22:59 +0700},
+	date-modified = {2024-11-27 14:23:06 +0700},
+	eprint = {1712.09936},
+	month = {12},
+	title = {Gradient Regularization Improves Accuracy of Discriminative Models},
+	url = {https://arxiv.org/pdf/1712.09936.pdf},
+	year = {2017},
+	bdsk-url-1 = {https://arxiv.org/pdf/1712.09936.pdf},
+	bdsk-url-2 = {https://arxiv.org/abs/1712.09936}}
+
+@article{Salimans2016,
+	abstract = {We present weight normalization: a reparameterization of the weight vectors in a neural network that decouples the length of those weight vectors from their direction. By reparameterizing the weights in this way we improve the conditioning of the optimization problem and we speed up convergence of stochastic gradient descent. Our reparameterization is inspired by batch normalization but does not introduce any dependencies between the examples in a minibatch. This means that our method can also be applied successfully to recurrent models such as LSTMs and to noise-sensitive applications such as deep reinforcement learning or generative models, for which batch normalization is less well suited. Although our method is much simpler, it still provides much of the speed-up of full batch normalization. In addition, the computational overhead of our method is lower, permitting more optimization steps to be taken in the same amount of time. We demonstrate the usefulness of our method on applications in supervised image recognition, generative modelling, and deep reinforcement learning.},
+	author = {Tim Salimans and Diederik P. Kingma},
+	date-added = {2024-11-27 14:19:10 +0700},
+	date-modified = {2024-11-27 14:19:17 +0700},
+	eprint = {1602.07868},
+	month = {02},
+	title = {Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks},
+	url = {https://arxiv.org/pdf/1602.07868.pdf},
+	year = {2016},
+	bdsk-url-1 = {https://arxiv.org/pdf/1602.07868.pdf},
+	bdsk-url-2 = {https://arxiv.org/abs/1602.07868}}
+
+@article{Gehring2017,
+	abstract = {The prevalent approach to sequence to sequence learning maps an input sequence to a variable length output sequence via recurrent neural networks. We introduce an architecture based entirely on convolutional neural networks. Compared to recurrent models, computations over all elements can be fully parallelized during training and optimization is easier since the number of non-linearities is fixed and independent of the input length. Our use of gated linear units eases gradient propagation and we equip each decoder layer with a separate attention module. We outperform the accuracy of the deep LSTM setup of Wu et al. (2016) on both WMT'14 English-German and WMT'14 English-French translation at an order of magnitude faster speed, both on GPU and CPU.},
+	author = {Jonas Gehring and Michael Auli and David Grangier and Denis Yarats and Yann N. Dauphin},
+	date-added = {2024-11-27 14:17:40 +0700},
+	date-modified = {2024-11-27 14:17:49 +0700},
+	eprint = {1705.03122},
+	month = {05},
+	title = {Convolutional Sequence to Sequence Learning},
+	url = {https://arxiv.org/pdf/1705.03122.pdf},
+	year = {2017},
+	bdsk-url-1 = {https://arxiv.org/pdf/1705.03122.pdf},
+	bdsk-url-2 = {https://arxiv.org/abs/1705.03122}}
+
+@article{Zhang2019aa,
+	abstract = {We provide a theoretical explanation for the effectiveness of gradient clipping in training deep neural networks. The key ingredient is a new smoothness condition derived from practical neural network training examples. We observe that gradient smoothness, a concept central to the analysis of first-order optimization algorithms that is often assumed to be a constant, demonstrates significant variability along the training trajectory of deep neural networks. Further, this smoothness positively correlates with the gradient norm, and contrary to standard assumptions in the literature, it can grow with the norm of the gradient. These empirical observations limit the applicability of existing theoretical analyses of algorithms that rely on a fixed bound on smoothness. These observations motivate us to introduce a novel relaxation of gradient smoothness that is weaker than the commonly used Lipschitz smoothness assumption. Under the new condition, we prove that two popular methods, namely, \emph{gradient clipping} and \emph{normalized gradient}, converge arbitrarily faster than gradient descent with fixed stepsize. We further explain why such adaptively scaled gradient methods can accelerate empirical convergence and verify our results empirically in popular neural network training settings.},
+	annote = {> Even though gradient clipping is a standard practice in tasks such as language models (e.g.
+Merity et al., 2018; Gehring et al., 2017; Peters et al., 2018), it lacks a firm theoretical grounding
+
+},
+	author = {Jingzhao Zhang and Tianxing He and Suvrit Sra and Ali Jadbabaie},
+	bdsk-color = {4},
+	date-added = {2024-11-27 14:14:07 +0700},
+	date-modified = {2024-11-27 14:15:50 +0700},
+	eprint = {1905.11881},
+	month = {05},
+	title = {Why gradient clipping accelerates training: A theoretical justification for adaptivity},
+	url = {https://arxiv.org/pdf/1905.11881.pdf},
+	year = {2019},
+	bdsk-url-1 = {https://arxiv.org/pdf/1905.11881.pdf},
+	bdsk-url-2 = {https://arxiv.org/abs/1905.11881}}
 
 @article{shannon-1950,
 	author = {Claude E. Shannon},
@@ -21,10 +78,10 @@
 	year = {1950},
 	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhYYm9va21hcmtfEDcuLi9TdHVkeS9QYXBlcnMvUHJvZ3JhbW1pbmdhQ29tcHV0ZXJmb3JQbGF5aW5nQ2hlc3MucGRmTxED7GJvb2vsAwAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgCAAAFAAAAAQEAAFVzZXJzAAAABgAAAAEBAABzY2FsZXMAAAUAAAABAQAAU3R1ZHkAAAAGAAAAAQEAAFBhcGVycwAAJwAAAAEBAABQcm9ncmFtbWluZ2FDb21wdXRlcmZvclBsYXlpbmdDaGVzcy5wZGYAFAAAAAEGAAAEAAAAFAAAACQAAAA0AAAARAAAAAgAAAAEAwAApUEAAAAAAAAIAAAABAMAACnaBQAAAAAACAAAAAQDAAArmCQAAAAAAAgAAAAEAwAAc8dfAAAAAAAIAAAABAMAANXVaQEAAAAAFAAAAAEGAACQAAAAoAAAALAAAADAAAAA0AAAAAgAAAAABAAAQcZo6kMq9I8YAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAwAAAAAAAAAEAAAAAwMAAPcBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMAAACQgpbnAAAACAAAAAAEAABBxi/IBoAAACQAAAABAQAANDM4NzY1ODQtNEI2OC00RUEzLUIwMDItRTQ0QTRCOTJBRDRDGAAAAAECAACBAAAAAQAAAO8TAAABAAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAPQAAAABAgAAZmI3YzMwODU1NjVhMTQ2NmNhYWU5NDY0YmVmNDAzMWZmOWU4MGY3ZmM5N2YwNThhMjE4MDg4ZDI2NDMxNDI0MzswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDAwMDAwMDIwO2NvbS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdyaXRlOzAxOzAxMDAwMDEwOzAwMDAwMDAwMDE2OWQ1ZDU7MDE7L3VzZXJzL3NjYWxlcy9zdHVkeS9wYXBlcnMvcHJvZ3JhbW1pbmdhY29tcHV0ZXJmb3JwbGF5aW5nY2hlc3MucGRmAMwAAAD+////AQAAAAAAAAAQAAAABBAAAHQAAAAAAAAABRAAAOAAAAAAAAAAEBAAAAwBAAAAAAAAQBAAAPwAAAAAAAAAAiAAANgBAAAAAAAABSAAAEgBAAAAAAAAECAAAFgBAAAAAAAAESAAAIwBAAAAAAAAEiAAAGwBAAAAAAAAEyAAAHwBAAAAAAAAICAAALgBAAAAAAAAMCAAAOQBAAAAAAAAAcAAACwBAAAAAAAAEcAAABQAAAAAAAAAEsAAADwBAAAAAAAAgPAAAOwBAAAAAAAAAAgADQAaACMAXQAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAARN}}
 
-@article{parnas-1978,
+@article{parnas1978,
 	author = {David L. Parnas},
 	date-added = {2024-11-26 10:47:49 +0700},
-	date-modified = {2024-11-26 10:49:01 +0700},
+	date-modified = {2024-11-27 14:18:10 +0700},
 	title = {Designing Software for Ease of Extension and Contraction},
 	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhYYm9va21hcmtfEEwuLi9TdHVkeS9QYXBlcnMvRGVzaWduaW5nIFNvZnR3YXJlIGZvciBFYXNlIG9mIEV4dGVuc2lvbiBhbmQgQ29udHJhY3Rpb24ucGRmTxEEGGJvb2sYBAAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQDAAAFAAAAAQEAAFVzZXJzAAAABgAAAAEBAABzY2FsZXMAAAUAAAABAQAAU3R1ZHkAAAAGAAAAAQEAAFBhcGVycwAAPAAAAAEBAABEZXNpZ25pbmcgU29mdHdhcmUgZm9yIEVhc2Ugb2YgRXh0ZW5zaW9uIGFuZCBDb250cmFjdGlvbi5wZGYUAAAAAQYAAAQAAAAUAAAAJAAAADQAAABEAAAACAAAAAQDAAClQQAAAAAAAAgAAAAEAwAAKdoFAAAAAAAIAAAABAMAACuYJAAAAAAACAAAAAQDAABzx18AAAAAAAgAAAAEAwAACRwIAAAAAAAUAAAAAQYAAKQAAAC0AAAAxAAAANQAAADkAAAACAAAAAAEAABBxcN5KVlRERgAAAABAgAAAQAAAAAAAAAPAAAAAAAAAAAAAAAAAAAACAAAAAQDAAADAAAAAAAAAAQAAAADAwAA9wEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2ludG9zaCBIRAgAAAAEAwAAAJCClucAAAAIAAAAAAQAAEHGL8gGgAAAJAAAAAEBAAA0Mzg3NjU4NC00QjY4LTRFQTMtQjAwMi1FNDRBNEI5MkFENEMYAAAAAQIAAIEAAAABAAAA7xMAAAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAABBQAACQEAAAECAAA4MWQ1NjBkNGE4NGI5ZWQ1NTdkMTYxMGNhYjlmMjAyNGVkYmFmYjEyYTg4ODU0YzcyNjY3NDJjYzljMDQ5ODgzOzAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwOzAwMDAwMDAwMDAwMDAwMjA7Y29tLmFwcGxlLmFwcC1zYW5kYm94LnJlYWQtd3JpdGU7MDE7MDEwMDAwMTA7MDAwMDAwMDAwMDA4MWMwOTswMTsvdXNlcnMvc2NhbGVzL3N0dWR5L3BhcGVycy9kZXNpZ25pbmcgc29mdHdhcmUgZm9yIGVhc2Ugb2YgZXh0ZW5zaW9uIGFuZCBjb250cmFjdGlvbi5wZGYAAAAAzAAAAP7///8BAAAAAAAAABAAAAAEEAAAiAAAAAAAAAAFEAAA9AAAAAAAAAAQEAAAIAEAAAAAAABAEAAAEAEAAAAAAAACIAAA7AEAAAAAAAAFIAAAXAEAAAAAAAAQIAAAbAEAAAAAAAARIAAAoAEAAAAAAAASIAAAgAEAAAAAAAATIAAAkAEAAAAAAAAgIAAAzAEAAAAAAAAwIAAA+AEAAAAAAAABwAAAQAEAAAAAAAARwAAAFAAAAAAAAAASwAAAUAEAAAAAAACA8AAAAAIAAAAAAAAACAANABoAIwByAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAABI4=}}
 
@@ -59,11 +116,11 @@
 	title = {The Hundred-Page Machine Learning Book},
 	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhYYm9va21hcmtfEDouLi9TdHVkeS9QYXBlcnMvVGhlIEh1bmRyZWQtUGFnZSBNYWNoaW5lIExlYXJuaW5nIEJvb2sucGRmTxEEMGJvb2swBAAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACADAAAFAAAAAQEAAFVzZXJzAAAABgAAAAEBAABzY2FsZXMAAAUAAAABAQAAU3R1ZHkAAAAGAAAAAQEAAFBhcGVycwAAKgAAAAEBAABUaGUgSHVuZHJlZC1QYWdlIE1hY2hpbmUgTGVhcm5pbmcgQm9vay5wZGYAABQAAAABBgAABAAAABQAAAAkAAAANAAAAEQAAAAIAAAABAMAAKVBAAAAAAAACAAAAAQDAAAp2gUAAAAAAAgAAAAEAwAAK5gkAAAAAAAIAAAABAMAAHPHXwAAAAAACAAAAAQDAABTbNoBAAAAABQAAAABBgAAlAAAAKQAAAC0AAAAxAAAANQAAAAIAAAAAAQAAEHF895CVa9sGAAAAAECAAABAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAIAAAABAMAAAMAAAAAAAAABAAAAAMDAAD3AQAACAAAAAEJAABmaWxlOi8vLwwAAAABAQAATWFjaW50b3NoIEhECAAAAAQDAAAAkIKW5wAAAAgAAAAABAAAQcYvyAaAAAAkAAAAAQEAADQzODc2NTg0LTRCNjgtNEVBMy1CMDAyLUU0NEE0QjkyQUQ0QxgAAAABAgAAgQAAAAEAAADvEwAAAQAAAAAAAAAAAAAAAQAAAAEBAAAvAAAAAAAAAAEFAAAaAAAAAQEAAE5TVVJMRG9jdW1lbnRJZGVudGlmaWVyS2V5AAAEAAAAAwMAAEkAAAD3AAAAAQIAADU3ZjAxZWI0M2YwMjgyMWRkMzgzOTZjMDljMDk5NmFlMjMzMWFlN2Q2ODkwOWNiZThlYWM0Y2E2ZjMzOTBjZjA7MDA7MDAwMDAwMDA7MDAwMDAwMDA7MDAwMDAwMDA7MDAwMDAwMDAwMDAwMDAyMDtjb20uYXBwbGUuYXBwLXNhbmRib3gucmVhZC13cml0ZTswMTswMTAwMDAxMDswMDAwMDAwMDAxZGE2YzUzOzAxOy91c2Vycy9zY2FsZXMvc3R1ZHkvcGFwZXJzL3RoZSBodW5kcmVkLXBhZ2UgbWFjaGluZSBsZWFybmluZyBib29rLnBkZgAA2AAAAP7///8BAAAAAAAAABEAAAAEEAAAeAAAAAAAAAAFEAAA5AAAAAAAAAAQEAAAEAEAAAAAAABAEAAAAAEAAAAAAAACIAAA3AEAAAAAAAAFIAAATAEAAAAAAAAQIAAAXAEAAAAAAAARIAAAkAEAAAAAAAASIAAAcAEAAAAAAAATIAAAgAEAAAAAAAAgIAAAvAEAAAAAAAAwIAAA6AEAAAAAAAABwAAAMAEAAAAAAAARwAAAFAAAAAAAAAASwAAAQAEAAAAAAACA8AAAIAIAAAAAAADwAQCAFAIAAAAAAAAACAANABoAIwBgAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAABJQ=}}
 
-@article{Butlin:2023aa,
+@article{Butlin2023,
 	abstract = {Whether current or near-term AI systems could be conscious is a topic of scientific interest and increasing public concern. This report argues for, and exemplifies, a rigorous and empirically grounded approach to AI consciousness: assessing existing AI systems in detail, in light of our best-supported neuroscientific theories of consciousness. We survey several prominent scientific theories of consciousness, including recurrent processing theory, global workspace theory, higher-order theories, predictive processing, and attention schema theory. From these theories we derive "indicator properties" of consciousness, elucidated in computational terms that allow us to assess AI systems for these properties. We use these indicator properties to assess several recent AI systems, and we discuss how future systems might implement them. Our analysis suggests that no current AI systems are conscious, but also suggests that there are no obvious technical barriers to building AI systems which satisfy these indicators.},
 	author = {Patrick Butlin and Robert Long and Eric Elmoznino and Yoshua Bengio and Jonathan Birch and Axel Constant and George Deane and Stephen M. Fleming and Chris Frith and Xu Ji and Ryota Kanai and Colin Klein and Grace Lindsay and Matthias Michel and Liad Mudrik and Megan A. K. Peters and Eric Schwitzgebel and Jonathan Simon and Rufin VanRullen},
 	date-added = {2024-11-24 23:44:14 +0700},
-	date-modified = {2024-11-24 23:44:37 +0700},
+	date-modified = {2024-11-27 14:18:05 +0700},
 	eprint = {2308.08708},
 	keywords = {consciousness, artificial intelligense},
 	month = {08},
@@ -307,7 +364,7 @@ This thesis also includes work on higher order game theory, a related but simple
 	school = {Queen Mary University of London},
 	title = {Towards compositional game theory},
 	year = {2016},
-	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhYYm9va21hcmtfECsuLi9TdHVkeS9QYXBlcnMvSEVER0VTX0p1bGlhbl9QaEQwMzEwMTYucGRmTxED1GJvb2vUAwAAAAAEEDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANACAAAFAAAAAQEAAFVzZXJzAAAABgAAAAEBAABzY2FsZXMAAAUAAAABAQAAU3R1ZHkAAAAGAAAAAQEAAFBhcGVycwAAGwAAAAEBAABIRURHRVNfSnVsaWFuX1BoRDAzMTAxNi5wZGYAFAAAAAEGAAAEAAAAFAAAACQAAAA0AAAARAAAAAgAAAAEAwAApUEAAAAAAAAIAAAABAMAACnaBQAAAAAACAAAAAQDAAArmCQAAAAAAAgAAAAEAwAAc8dfAAAAAAAIAAAABAMAAGFowAEAAAAAFAAAAAEGAACEAAAAlAAAAKQAAAC0AAAAxAAAAAgAAAAABAAAQcZ1E0GUYQYYAAAAAQIAAAEAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAgAAAAEAwAAAwAAAAAAAAAEAAAAAwMAAPcBAAAIAAAAAQkAAGZpbGU6Ly8vDAAAAAEBAABNYWNpbnRvc2ggSEQIAAAABAMAAACQgpbnAAAACAAAAAAEAABBxi/IBoAAACQAAAABAQAANDM4NzY1ODQtNEI2OC00RUEzLUIwMDItRTQ0QTRCOTJBRDRDGAAAAAECAACBAAAAAQAAAO8TAAABAAAAAAAAAAAAAAABAAAAAQEAAC8AAAAAAAAAAQUAAOgAAAABAgAAMzMzYTRlZWZhZTkzYWUyOTk3M2UzNGFlY2IwZDY2NzY0ZGIxZTQyM2U0NzFmOGY5OTMxNjFjZmQ4YTYyMDYyYTswMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDswMDAwMDAwMDAwMDAwMDIwO2NvbS5hcHBsZS5hcHAtc2FuZGJveC5yZWFkLXdyaXRlOzAxOzAxMDAwMDEwOzAwMDAwMDAwMDFjMDY4NjE7MDE7L3VzZXJzL3NjYWxlcy9zdHVkeS9wYXBlcnMvaGVkZ2VzX2p1bGlhbl9waGQwMzEwMTYucGRmAMwAAAD+////AQAAAAAAAAAQAAAABBAAAGgAAAAAAAAABRAAANQAAAAAAAAAEBAAAAABAAAAAAAAQBAAAPAAAAAAAAAAAiAAAMwBAAAAAAAABSAAADwBAAAAAAAAECAAAEwBAAAAAAAAESAAAIABAAAAAAAAEiAAAGABAAAAAAAAEyAAAHABAAAAAAAAICAAAKwBAAAAAAAAMCAAANgBAAAAAAAAAcAAACABAAAAAAAAEcAAABQAAAAAAAAAEsAAADABAAAAAAAAgPAAAOABAAAAAAAAAAgADQAaACMAUQAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAQp}}
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhYYm9va21hcmtfEDUuLi9TdHVkeS9QYXBlcnMvVG93YXJkcyBDb21wb3NpdGlvbmFsIEdhbWUgVGhlb3J5LnBkZk8RA+xib29r7AMAAAAABBAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADoAgAABQAAAAEBAABVc2VycwAAAAYAAAABAQAAc2NhbGVzAAAFAAAAAQEAAFN0dWR5AAAABgAAAAEBAABQYXBlcnMAACUAAAABAQAAVG93YXJkcyBDb21wb3NpdGlvbmFsIEdhbWUgVGhlb3J5LnBkZgAAABQAAAABBgAABAAAABQAAAAkAAAANAAAAEQAAAAIAAAABAMAAKVBAAAAAAAACAAAAAQDAAAp2gUAAAAAAAgAAAAEAwAAK5gkAAAAAAAIAAAABAMAAHPHXwAAAAAACAAAAAQDAAC0Xt8BAAAAABQAAAABBgAAkAAAAKAAAACwAAAAwAAAANAAAAAIAAAAAAQAAEHGdRNBlGEGGAAAAAECAAABAAAAAAAAAA8AAAAAAAAAAAAAAAAAAAAIAAAABAMAAAMAAAAAAAAABAAAAAMDAAD3AQAACAAAAAEJAABmaWxlOi8vLwwAAAABAQAATWFjaW50b3NoIEhECAAAAAQDAAAAkIKW5wAAAAgAAAAABAAAQcYvyAaAAAAkAAAAAQEAADQzODc2NTg0LTRCNjgtNEVBMy1CMDAyLUU0NEE0QjkyQUQ0QxgAAAABAgAAgQAAAAEAAADvEwAAAQAAAAAAAAAAAAAAAQAAAAEBAAAvAAAAAAAAAAEFAADyAAAAAQIAADAzYjY5YmMzMzM1MzU1MmMyYzYzZThiMjUwOGU5YzQ4NGY1NjFkYjZhNzJkMmY3ZjUxOWM0NzVkNzFhMzA0OWM7MDA7MDAwMDAwMDA7MDAwMDAwMDA7MDAwMDAwMDA7MDAwMDAwMDAwMDAwMDAyMDtjb20uYXBwbGUuYXBwLXNhbmRib3gucmVhZC13cml0ZTswMTswMTAwMDAxMDswMDAwMDAwMDAxZGY1ZWI0OzAxOy91c2Vycy9zY2FsZXMvc3R1ZHkvcGFwZXJzL3Rvd2FyZHMgY29tcG9zaXRpb25hbCBnYW1lIHRoZW9yeS5wZGYAAADMAAAA/v///wEAAAAAAAAAEAAAAAQQAAB0AAAAAAAAAAUQAADgAAAAAAAAABAQAAAMAQAAAAAAAEAQAAD8AAAAAAAAAAIgAADYAQAAAAAAAAUgAABIAQAAAAAAABAgAABYAQAAAAAAABEgAACMAQAAAAAAABIgAABsAQAAAAAAABMgAAB8AQAAAAAAACAgAAC4AQAAAAAAADAgAADkAQAAAAAAAAHAAAAsAQAAAAAAABHAAAAUAAAAAAAAABLAAAA8AQAAAAAAAIDwAADsAQAAAAAAAAAIAA0AGgAjAFsAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAAESw==}}
 
 @book{automl-mcs,
 	author = {Frank Hutter},

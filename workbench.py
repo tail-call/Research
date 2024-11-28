@@ -4,6 +4,7 @@ from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.TrainingParameters import TrainingParameters
 from cgtnnlib.LearningTask import classification_task
+from cgtnnlib.analyze import analyze_main
 from cgtnnlib.common import DATASETS, LEARNING_RATE, eval_inner
 from cgtnnlib.training import train_model_outer
 
@@ -60,3 +61,6 @@ eval_inner(
     experiment_params=experiment_params,
     constructor=model_constructor
 )
+
+report.save()
+analyze_main(report_path=report.path)

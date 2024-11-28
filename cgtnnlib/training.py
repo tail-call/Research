@@ -15,6 +15,7 @@ from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.LearningTask import classification_task, regression_task
 # from cgtnnlib.RegularNetwork import RegularNetwork
+from cgtnnlib.NetworkLike import NetworkLike
 from cgtnnlib.Report import Report
 from cgtnnlib.TrainingParameters import TrainingParameters
 from cgtnnlib.torch_device import torch_device
@@ -89,8 +90,41 @@ def train_model(
 
     return running_losses
 
+def train_model_outer(
+    model: nn.Module,
+    filename: str,
+    epochs: int,
+    training_params: TrainingParameters,
+    experiment_params: ExperimentParameters,
+    learning_rate: float,
+    report: Report,
+    dry_run: bool,
+):
+    model.apply(init_weights)
 
-def train_all_models(
+    model = model.to(torch_device)
+
+    running_losses = train_model(
+        model=model,
+        dataset=training_params.dataset,
+        epochs=epochs,
+        experiment_parameters=experiment_params,
+        criterion=training_params.learning_task.criterion,
+        optimizer=optim.Adam(
+            model.parameters(),
+            lr=learning_rate,
+        ),
+        dry_run=dry_run,
+    )
+
+    print(f"train_model_outer(): saved model to {filename}")
+    torch.save(model.state_dict(), filename)
+
+    report_key = f'loss_{type(model).__name__}_{training_params.dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
+
+    report.append(report_key, running_losses)
+
+def create_and_train_all_models(
     datasets: list[Dataset],
     epochs: int,
     learning_rate: float,
@@ -105,80 +139,46 @@ def train_all_models(
         for training_params in [
             TrainingParameters(
                 dataset=datasets[0],
-                criterion=classification_task.criterion,
+                learning_task=classification_task,
                 experiment_params=experiment_params,
-                model_a_path=datasets[0].model_a_path(experiment_params),
-                model_b_path=datasets[0].model_b_path(experiment_params),
-                loss_curve_plot_col_index=0,
             ),
             TrainingParameters(
                 dataset=datasets[1],
-                criterion=classification_task.criterion,
+                learning_task=classification_task,
                 experiment_params=experiment_params,
-                model_a_path=datasets[1].model_a_path(experiment_params),
-                model_b_path=datasets[1].model_b_path(experiment_params),
-                loss_curve_plot_col_index=1,
             ),
             TrainingParameters(
                 dataset=datasets[2],
-                criterion=regression_task.criterion,
+                learning_task=regression_task,
                 experiment_params=experiment_params,
-                model_a_path=datasets[2].model_a_path(experiment_params),
-                model_b_path=datasets[2].model_b_path(experiment_params),
-                loss_curve_plot_col_index=2,
             )
         ]:
             inputs_count = training_params.dataset.features_count
             outputs_count = training_params.dataset.classes_count
 
-
-            for (model, name, row) in [
+            for (model, name) in [
                 ## Uncomment to train RegularNetwork
                 # (RegularNetwork(
                 #     inputs_count=inputs_count,
                 #     outputs_count=outputs_count,
                 #     p=experiment_params.p
-                # ), training_params.model_a_path, 0),
+                # ), training_params.model_a_path),
                 (AugmentedReLUNetwork(
                     inputs_count=inputs_count,
                     outputs_count=outputs_count,
                     p=experiment_params.p
-                ), training_params.model_b_path, 1)
+                ), training_params.dataset.model_b_path(experiment_params))
             ]:
-                model.apply(init_weights)
-
-                model = model.to(torch_device)
-
-                running_losses = train_model(
+                train_model_outer(
                     model=model,
-                    dataset=training_params.dataset,
+                    filename=name,
                     epochs=epochs,
-                    experiment_parameters=experiment_params,
-                    criterion=training_params.criterion,
-                    optimizer=optim.Adam(
-                        model.parameters(),
-                        lr=learning_rate,
-                    ),
+                    training_params=training_params,
+                    experiment_params=experiment_params,
+                    learning_rate=learning_rate,
+                    report=report,
                     dry_run=dry_run,
                 )
 
-                torch.save(model.state_dict(), name)
-
-                report_key = f'loss_{type(model).__name__}_{training_params.dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
-
-                report.append(report_key, running_losses)
-
-                # XXX Unneeded?
-                # col = training_params.loss_curve_plot_col_index
-                # plot_loss_curve(
-                #     ax=axs[row, col],
-                #     model_name=model.__class__.__name__,
-                #     dataset_name=training_params.dataset.name,
-                #     dataset_number=training_params.dataset.number,
-                #     running_losses=running_losses,
-                #     p=experiment_params.p,
-                #     iteration=experiment_params.iteration
-                # )
-
-        path = f'loss__p{experiment_params.p}_N{experiment_params.iteration}'
-        print('train_main(): path = ', path)
+        # path = f'loss__p{experiment_params.p}_N{experiment_params.iteration}'
+        # print('train_main(): path = ', path)

@@ -3,7 +3,7 @@ import torch
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-path = 'pth/model-1B-c-P0.05_N7.pth'
+path = 'WorkbenchModel1.pth'
 layer = 'fc2.weight'
 
 model_weights = torch.load(path)

@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 
 from cgtnnlib.RegularNetwork import RegularNetwork
 from cgtnnlib.Report import Report
-from cgtnnlib.training import train_all_models
+from cgtnnlib.training import create_and_train_all_models
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.datasets import make_dataset1, make_dataset2, make_dataset3
@@ -279,7 +279,7 @@ DATASETS: list[Dataset] = [
 ]
 
 def train_main():
-    train_all_models(
+    create_and_train_all_models(
         datasets=DATASETS,
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,

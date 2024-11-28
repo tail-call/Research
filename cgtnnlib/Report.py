@@ -1,9 +1,11 @@
 ## Report v.0.2
 ## Created at Tue 26 Nov 2024
 ## Modified at Thu 28 Nov 2024
+## v.0.3 - eval_report_key()
 ## v.0.2 - .path, .filename properties; .see() method
 
 from datetime import datetime
+from pprint import pprint
 import os
 import json
 
@@ -15,7 +17,6 @@ def now_isoformat() -> str:
 
 def see_value(value) -> str:
     if isinstance(value, (list, np.ndarray, torch.Tensor)):
-        # Get the number of items in the list, numpy array, or tensor
         num_items = len(value) if isinstance(value, list) else value.size
         return f"{type(value).__name__}({num_items} items)"
     elif isinstance(value, str):
@@ -57,4 +58,13 @@ class Report:
         print(''.join(['=' for _ in range(0, len(title))]))
         
         for key in self.data:
-            print(f"{key}: {see_value(self.data[key])}")
+            value = self.data[key]
+            print(f"{key}: {see_value(value)}")
+
+def eval_report_key(
+    model_name: str,
+    dataset_number: int,
+    p: float,
+    iteration: int,
+) -> str:
+    return f'evaluate_{model_name}_{dataset_number}_p{p}_N{iteration}'

@@ -1,6 +1,7 @@
-## COMMON LIBRARY v.0.7
+## COMMON LIBRARY v.0.8
 ## Created at Sat 23 Nov 2024
 ## Updated at Wed 27 Nov 2024
+## v.0.8 - evaluate_main()
 ## v.0.7 - training.py
 ## v.0.6 - even more classes within their own files
 ## v.0.5 - improved LearningTask interface
@@ -11,6 +12,10 @@
 ## 1.4.-2 Imports
 
 import os
+from typing import Any
+from typing_extensions import Literal
+
+from IPython.display import clear_output
 
 import numpy as np
 import pandas as pd
@@ -22,12 +27,15 @@ import torch.nn.functional as F
 
 import matplotlib.pyplot as plt
 
+from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
+from cgtnnlib.EvaluationParameters import EvaluationParameters
 from cgtnnlib.RegularNetwork import RegularNetwork
-from cgtnnlib.Report import Report
+from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.training import create_and_train_all_models
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.datasets import make_dataset1, make_dataset2, make_dataset3
+from cgtnnlib.LearningTask import classification_task, is_classification_task, is_regression_task, regression_task
 
 ## 1.4.-1 Configuration
 
@@ -119,11 +127,15 @@ def eval_accuracy_f1_rocauc(
     f1 = f1_score(all_labels, all_predictions, average='weighted')
 
     if is_binary_classification:
-        all_probs = np.array(all_probs)[:, 0]
+        np_all_probs = np.array(all_probs)[:, 0]
+    else:
+        np_all_probs = np.array(all_probs)
 
-    roc_auc = roc_auc_score(all_labels, all_probs, multi_class='ovr')
+    roc_auc = roc_auc_score(all_labels, np_all_probs, multi_class='ovr')
 
     return float(accuracy), float(f1), float(roc_auc)
+
+cool_type = np.ndarray[Any, np.dtype[Any]]
 
 def eval_r2_mse(
     evaluated_model: RegularNetwork,
@@ -141,11 +153,11 @@ def eval_r2_mse(
             all_labels.extend(labels.cpu().numpy())
             all_predictions.extend(outputs.cpu().numpy())
 
-    all_labels = np.array(all_labels)
-    all_predictions = np.array(all_predictions)
+    np_all_labels = np.array(all_labels)
+    np_all_predictions = np.array(all_predictions)
 
-    r2 = r2_score(all_labels, all_predictions)
-    mse = mean_squared_error(all_labels, all_predictions)
+    r2 = r2_score(np_all_labels, np_all_predictions)
+    mse = mean_squared_error(np_all_labels, np_all_predictions)
 
     return float(r2), float(mse)
 
@@ -260,6 +272,140 @@ def plot_evaluation_of_regression(
     r2_ax.legend()
     r2_ax.grid(True, which="both", ls="--")
 
+def model_path_for(
+    model_a_or_b: Literal["A", "B"],
+    dataset: Dataset,
+    experiment_params: ExperimentParameters,
+):
+    if model_a_or_b == "A":
+        return dataset.model_a_path(experiment_params)
+    elif model_a_or_b == "B":
+        return dataset.model_b_path(experiment_params)
+    else:
+        raise TypeError('model_a_or_b must be A or B')
+
+def eval_inner(
+    eval_params: EvaluationParameters,
+    experiment_params: ExperimentParameters,
+    constructor: type,
+):
+    evaluated_model = constructor(
+        inputs_count=eval_params.inputs_count,
+        outputs_count=eval_params.outputs_count,
+        p=experiment_params.p
+    )
+
+    clear_output(wait=True)
+    print(f'Evaluating model at {eval_params.model_path}...')
+    evaluated_model.load_state_dict(torch.load(eval_params.model_path))
+
+    if is_classification_task(eval_params.task):
+        df = evaluate_classification_model(
+            evaluated_model=evaluated_model,
+            dataset=eval_params.dataset,
+            report_key=eval_params.report_key,
+            is_binary_classification=eval_params.is_binary_classification
+        )
+        print('Evaluation of classification (head):')
+        print(df.head())
+        # plot_evaluation_of_classification(
+        #     df=df,
+        #     accuracy_ax=_.accuracy_ax,
+        #     f1_ax=_.f1_ax,
+        #     roc_auc_ax=_.roc_auc_ax,
+        #     title=plot_title
+        # )
+    elif is_regression_task(eval_params.task):
+        df = evaluate_regression_model(
+            evaluated_model=evaluated_model,
+            dataset=eval_params.dataset,
+            report_key=eval_params.report_key
+        )
+        print('Evaluation of regression (head):')
+        print(df.head())
+        # plot_evaluation_of_regression(
+        #     df=df,
+        #     mse_ax=_.mse_ax,
+        #     r2_ax=_.r2_ax,
+        #     title=plot_title
+        # )
+    else:
+        raise ValueError(f"Unknown task: {eval_params.task}")
+
+def evaluate(
+    model_a_or_b: Literal["A", "B"],
+    constructor: type,
+    experiment_params: ExperimentParameters
+):
+    """
+    Оценивает модель `"A"` (`RegularNetwork`) или `"B"`
+    (`AugmentedReLUNetwork`) согласно параметрам `experiment_params` на
+    наборах данных из `DATASETS`.
+    Рисует графики метрик и сохраняет их на диск.
+    
+    - `constructor` может быть `RegularNetwork` или `AugmentedReLUNetwork`
+      и должен соответствовать переданному `model_a_or_b`.
+    """
+
+    eval_params_items: list[EvaluationParameters] = [
+        EvaluationParameters(
+            DATASETS[0],
+            model_path_for(model_a_or_b, DATASETS[0], experiment_params),
+            is_binary_classification=True,
+            is_regression=False,
+            inputs_count=30,
+            outputs_count=2,
+            task=classification_task,
+            experiment_parameters=experiment_params,
+            report_key=eval_report_key(
+                model_name=constructor.__name__,
+                dataset_number=DATASETS[0].number,
+                p=experiment_params.p,
+                iteration=experiment_params.iteration,
+            )
+        ),
+        EvaluationParameters(
+            DATASETS[1],
+            model_path_for(model_a_or_b, DATASETS[1], experiment_params),
+            is_binary_classification=False,
+            is_regression=False,
+            inputs_count=6,
+            outputs_count=4,
+            task=classification_task,
+            experiment_parameters=experiment_params,
+            report_key=eval_report_key(
+                model_name=constructor.__name__,
+                dataset_number=DATASETS[1].number,
+                p=experiment_params.p,
+                iteration=experiment_params.iteration,
+            )
+        ),
+        EvaluationParameters(
+            DATASETS[2],
+            model_path_for(model_a_or_b, DATASETS[2], experiment_params),
+            is_binary_classification=False,
+            is_regression=True,
+            inputs_count=19,
+            outputs_count=1,
+            task=regression_task,
+            experiment_parameters=experiment_params,
+            report_key=eval_report_key(
+                model_name=constructor.__name__,
+                dataset_number=DATASETS[2].number,
+                p=experiment_params.p,
+                iteration=experiment_params.iteration,
+            )
+        ),
+    ]
+    
+
+    for (i, eval_params) in enumerate(eval_params_items):
+        eval_inner(
+            eval_params,
+            experiment_params,
+            constructor
+        )
+
 DATASETS: list[Dataset] = [
     make_dataset1(
         batch_size=12,
@@ -289,10 +435,20 @@ def train_main():
     )
 
 def evaluate_main():
-    print('TODO: evaluate_main()')
+    for experiment_params in iterate_experiment_parameters():
+        # evaluate(
+        #     model_a_or_b='A',
+        #     constructor=RegularNetwork,
+        #     experiment_params=experiment_params
+        # )
+        evaluate(
+            model_a_or_b='B',
+            constructor=AugmentedReLUNetwork,
+            experiment_params=experiment_params
+        )
 
 if __name__ == "__main__":
-    print('# common.py')
+    print('# py')
     print('')
     print('Datasets:')
     for dataset in DATASETS:

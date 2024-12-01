@@ -14,7 +14,7 @@ import torch
 import numpy as np
 import pandas as pd
 
-from cgtnnlib.PlotParams import PlotParams
+from cgtnnlib.PlotModel import PlotModel
 
 SearchIndex: TypeAlias = pd.DataFrame
 RawReport: TypeAlias = dict[str, dict | list | str]
@@ -101,7 +101,7 @@ def make_search_index(raw_report: RawReport) -> SearchIndex:
 
 def search_plot_data(
     search_index: pd.DataFrame,
-    plot_params: PlotParams,
+    plot_params: PlotModel,
 ) -> pd.DataFrame:
     search_results: pd.DataFrame = (
         search_index

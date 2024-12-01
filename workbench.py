@@ -1,10 +1,10 @@
 from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
 from cgtnnlib.EvaluationParameters import EvaluationParameters
 from cgtnnlib.ExperimentParameters import ExperimentParameters
-from cgtnnlib.PlotParams import PlotParams
+from cgtnnlib.PlotModel import PlotModel
 from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.TrainingParameters import TrainingParameters
-from cgtnnlib.analyze import analyze_just_one
+from cgtnnlib.analyze import search_curve_for_report
 from cgtnnlib.common import DATASETS, LEARNING_RATE, eval_inner
 from cgtnnlib.training import train_model_outer
 
@@ -17,7 +17,6 @@ print(DATASET)
 MODEL_CONSTRUCTOR = AugmentedReLUNetwork
 
 
-def action1():
 for iteration in range(1, 11):
     model_path = f"WorkbenchModel{iteration}.pth"
     experiment_params = ExperimentParameters(
@@ -66,9 +65,9 @@ for iteration in range(1, 11):
 REPORT.see()
 REPORT.save()
 
-analyze_just_one(
+search_curve_for_report(
     report_path=REPORT.path,
-    plot_params=PlotParams(
+    model=PlotModel(
         measurement='loss',
         dataset_number=DATASET.number,
         metric='loss',

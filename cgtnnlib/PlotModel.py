@@ -7,7 +7,7 @@ Metric: TypeAlias = Literal['r2', 'mse', 'f1', 'accuracy', 'roc_auc', 'loss']
 
 
 @dataclass
-class PlotParams:
+class PlotModel:
     measurement: Measurement
     dataset_number: int
     model_name = 'AugmentedReLUNetwork'

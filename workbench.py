@@ -1,48 +1,48 @@
 from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
 from cgtnnlib.EvaluationParameters import EvaluationParameters
 from cgtnnlib.ExperimentParameters import ExperimentParameters
+from cgtnnlib.PlotParams import PlotParams
 from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.TrainingParameters import TrainingParameters
-from cgtnnlib.LearningTask import classification_task
-from cgtnnlib.analyze import analyze_main
+from cgtnnlib.analyze import analyze_just_one
 from cgtnnlib.common import DATASETS, LEARNING_RATE, eval_inner
 from cgtnnlib.training import train_model_outer
 
-report = Report(dir="workbench/")
+REPORT = Report(dir="workbench/")
+DATASET = DATASETS[2]
+P = 0.5
 
-dataset = DATASETS[0]
-model_constructor = AugmentedReLUNetwork
-model_path = "WorkbenchModel1.pth"
+print(DATASET)
 
-p = 0.05
+MODEL_CONSTRUCTOR = AugmentedReLUNetwork
 
+
+def action1():
 for iteration in range(1, 11):
+    model_path = f"WorkbenchModel{iteration}.pth"
     experiment_params = ExperimentParameters(
         iteration=iteration,
-        p=p
+        p=P
     )
     training_params = TrainingParameters(
-        dataset=dataset,
-        learning_task=classification_task,
+        dataset=DATASET,
+        learning_task=DATASET.learning_task,
         experiment_params=experiment_params,
     )
     eval_params = EvaluationParameters(
-        dataset=dataset,
+        dataset=DATASET,
         model_path=model_path,
-        is_binary_classification=True,
-        is_regression=False,
-        task=classification_task,
         experiment_parameters=experiment_params,
         report_key=eval_report_key(
-            model_name=model_constructor.__name__,
-            dataset_number=DATASETS[0].number,
-            p=p,
+            model_name=MODEL_CONSTRUCTOR.__name__,
+            dataset_number=DATASET.number,
+            p=P,
             iteration=iteration,
         )
     )
-    model = model_constructor(
-        inputs_count=dataset.features_count,
-        outputs_count=dataset.classes_count,
+    model = MODEL_CONSTRUCTOR(
+        inputs_count=DATASET.features_count,
+        outputs_count=DATASET.classes_count,
         p=experiment_params.p,
     )
 
@@ -53,16 +53,26 @@ for iteration in range(1, 11):
         training_params=training_params,
         experiment_params=experiment_params,
         learning_rate=LEARNING_RATE,
-        report=report,
+        report=REPORT,
         dry_run=False
     )
 
     eval_inner(
         eval_params=eval_params,
         experiment_params=experiment_params,
-        constructor=model_constructor
+        constructor=MODEL_CONSTRUCTOR
     )
 
-report.see()
-report.save()
-analyze_main(report_path=report.path)
+REPORT.see()
+REPORT.save()
+
+analyze_just_one(
+    report_path=REPORT.path,
+    plot_params=PlotParams(
+        measurement='loss',
+        dataset_number=DATASET.number,
+        metric='loss',
+        p=P,
+        frac=1.0,
+    )
+)

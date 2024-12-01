@@ -1,12 +1,15 @@
 from dataclasses import dataclass
 
-from .DatasetData import DatasetData
-from .ExperimentParameters import ExperimentParameters
+from cgtnnlib.LearningTask import LearningTask
+
+from cgtnnlib.DatasetData import DatasetData
+from cgtnnlib.ExperimentParameters import ExperimentParameters
 
 
 @dataclass
 class Dataset:
     name: str
+    learning_task: LearningTask
     number: int
     # ::: can be derived from DatasetData
     classes_count: int

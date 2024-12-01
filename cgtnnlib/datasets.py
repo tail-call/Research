@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from cgtnnlib.LearningTask import regression_task, classification_task
+from cgtnnlib.LearningTask import LearningTask, regression_task, classification_task
 from cgtnnlib.DatasetData import DatasetData
 from cgtnnlib.Dataset import Dataset
 
@@ -228,7 +228,8 @@ def student_performance_factors_dataset(
 def make_dataset1(
     batch_size: int,
     test_size: float,
-    random_state: int
+    random_state: int,
+    learning_task: LearningTask,
 ) -> Dataset:
     train_dataset, test_dataset = breast_cancer_dataset(
         test_size=test_size,
@@ -237,6 +238,7 @@ def make_dataset1(
 
     return Dataset(
         name='wisc_bc_data.csv',
+        learning_task=learning_task,
         number=1,
         classes_count=2,
         data=DatasetData(
@@ -258,7 +260,8 @@ def make_dataset1(
 def make_dataset2(
     batch_size: int,
     test_size: float,
-    random_state: int
+    random_state: int,
+    learning_task: LearningTask,
 ) -> Dataset:
     train_dataset, test_dataset = car_evaluation_dataset(
         test_size=test_size,
@@ -267,6 +270,7 @@ def make_dataset2(
 
     return Dataset(
         name='car_evaluation.csv',
+        learning_task=learning_task,
         number=2,
         classes_count=4,
         data=DatasetData(
@@ -288,7 +292,8 @@ def make_dataset2(
 def make_dataset3(
     batch_size: int,
     test_size: float,
-    random_state: int
+    random_state: int,
+    learning_task: LearningTask,
 ) -> Dataset:
     # ::: Use lazy evaluation?..
     train_dataset, test_dataset = student_performance_factors_dataset(
@@ -298,6 +303,7 @@ def make_dataset3(
 
     return Dataset(
         name='StudentPerformanceFactors.csv',
+        learning_task=learning_task,
         number=3,
         classes_count=1,
         data=DatasetData(

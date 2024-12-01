@@ -93,7 +93,7 @@ def iterate_experiment_parameters():
 
 ## 1.4.11 Evaluation
 
-def positive_probs_from(probs: torch.Tensor) -> list:
+def positive_probs_from(probs: torch.Tensor) -> np.ndarray[Any, np.dtype[Any]]:
     return np.array(probs)[:, 0]
 
 def eval_accuracy_f1_rocauc(
@@ -351,9 +351,6 @@ def evaluate(
         EvaluationParameters(
             DATASETS[0],
             model_path_for(model_a_or_b, DATASETS[0], experiment_params),
-            is_binary_classification=True,
-            is_regression=False,
-            task=classification_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
@@ -365,9 +362,6 @@ def evaluate(
         EvaluationParameters(
             DATASETS[1],
             model_path_for(model_a_or_b, DATASETS[1], experiment_params),
-            is_binary_classification=False,
-            is_regression=False,
-            task=classification_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
@@ -379,9 +373,6 @@ def evaluate(
         EvaluationParameters(
             DATASETS[2],
             model_path_for(model_a_or_b, DATASETS[2], experiment_params),
-            is_binary_classification=False,
-            is_regression=True,
-            task=regression_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
@@ -404,17 +395,20 @@ DATASETS: list[Dataset] = [
     make_dataset1(
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE
+        random_state=RANDOM_STATE,
+        learning_task=classification_task,
     ),
     make_dataset2(
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
         random_state=RANDOM_STATE,
+        learning_task=classification_task,
     ),
     make_dataset3(
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
         random_state=RANDOM_STATE,
+        learning_task=regression_task,
     ),
 ]
 

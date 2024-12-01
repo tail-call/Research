@@ -1,13 +1,16 @@
 ## 1.4.3 Learning task types
 
+from typing import Literal, TypeAlias
 from dataclasses import dataclass
 
 import torch
 import torch.nn as nn
 
+LearningTaskName: TypeAlias = Literal['classification', 'regression']
+
 @dataclass
 class LearningTask:
-    name: str
+    name: LearningTaskName
     criterion: nn.CrossEntropyLoss | nn.MSELoss
     dtype: torch.dtype
 

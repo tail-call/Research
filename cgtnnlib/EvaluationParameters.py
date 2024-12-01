@@ -1,5 +1,8 @@
-## EvaluationParameters v.0.1
-## Created at Thu 28 Nov
+## EvaluationParameters v.0.2
+## Created at Thu 28 Nov 2024
+## Modified at Sun 1 Dec 2024
+## v.0.2 removed inputs_count and outputs_count
+##       (they may be derived from dataset)
 
 from dataclasses import dataclass
 
@@ -14,8 +17,6 @@ class EvaluationParameters:
     model_path: str
     is_binary_classification: bool
     is_regression: bool
-    inputs_count: int
-    outputs_count: int
     task: LearningTask
     experiment_parameters: ExperimentParameters
     report_key: str

@@ -290,8 +290,8 @@ def eval_inner(
     constructor: type,
 ):
     evaluated_model = constructor(
-        inputs_count=eval_params.inputs_count,
-        outputs_count=eval_params.outputs_count,
+        inputs_count=eval_params.dataset.features_count,
+        outputs_count=eval_params.dataset.classes_count,
         p=experiment_params.p
     )
 
@@ -353,8 +353,6 @@ def evaluate(
             model_path_for(model_a_or_b, DATASETS[0], experiment_params),
             is_binary_classification=True,
             is_regression=False,
-            inputs_count=30,
-            outputs_count=2,
             task=classification_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
@@ -369,8 +367,6 @@ def evaluate(
             model_path_for(model_a_or_b, DATASETS[1], experiment_params),
             is_binary_classification=False,
             is_regression=False,
-            inputs_count=6,
-            outputs_count=4,
             task=classification_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
@@ -385,8 +381,6 @@ def evaluate(
             model_path_for(model_a_or_b, DATASETS[2], experiment_params),
             is_binary_classification=False,
             is_regression=True,
-            inputs_count=19,
-            outputs_count=1,
             task=regression_task,
             experiment_parameters=experiment_params,
             report_key=eval_report_key(

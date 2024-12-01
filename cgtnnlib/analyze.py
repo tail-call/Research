@@ -79,6 +79,8 @@ def search_plot_data(
     )
     
     if search_results.empty:
+        print("Search index:")
+        print(search_index)
         raise IndexError(f"Search failed: {plot_params}")
     
     return search_results

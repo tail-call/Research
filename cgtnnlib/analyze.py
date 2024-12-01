@@ -48,7 +48,7 @@ def plot_curve_on_ax_or_plt(
         ax_or_plt.set_title(title)
     else:
         ax_or_plt.xlabel(xlabel)
-        ax_or_plt.ylabel(xlabel)
+        ax_or_plt.ylabel(ylabel)
         ax_or_plt.title(title)
 
     ax_or_plt.legend()

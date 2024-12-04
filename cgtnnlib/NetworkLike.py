@@ -5,7 +5,7 @@ import torch
 @runtime_checkable
 class NetworkLike(Protocol):
     """
-    Protocol for a neural network with custom ReLU layers.
+    Protocol for a neural network.
     """
 
     @property

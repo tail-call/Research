@@ -1,6 +1,7 @@
-## Training module v.0.2
+## Training module v.0.3
 ## Created at Tue 26 Nov 2024
-## Updated at Tue 27 Nov 2024
+## Updated at Wed 4 Dec 2024
+## v.0.3 - removed train_model_outer()
 
 from typing import Iterable
 import torch
@@ -14,11 +15,9 @@ from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.LearningTask import classification_task, regression_task
-# from cgtnnlib.RegularNetwork import RegularNetwork
-from cgtnnlib.NetworkLike import NetworkLike
 from cgtnnlib.Report import Report
 from cgtnnlib.TrainingParameters import TrainingParameters
-from cgtnnlib.torch_device import torch_device
+from cgtnnlib.torch_device import TORCH_DEVICE
 
 PRINT_TRAINING_SPAN = 500
 
@@ -46,16 +45,14 @@ def train_model(
     model,
     dataset: Dataset,
     epochs: int,
-    experiment_parameters: ExperimentParameters,
+    experiment_params: ExperimentParameters,
     criterion,
     optimizer,
-    dry_run: bool,
 ) -> list[float]:
-    running_losses: list[float] = []
+    model.apply(init_weights)
+    model = model.to(TORCH_DEVICE)
 
-    if dry_run:
-        print(f"NOTE: Training model {model} in dry run mode. No changes to weights will be applied. An array of {epochs} -1s is generated for running_losses.")
-        return [-1 for _ in range(epochs)]
+    running_losses: list[float] = []
 
     for epoch in range(epochs):
         running_loss = 0.0
@@ -63,11 +60,11 @@ def train_model(
         model.train()
 
         for i, (inputs, labels) in enumerate(dataset.data.train_loader):
-            inputs, labels = inputs.to(torch_device), labels.to(torch_device)
+            inputs, labels = inputs.to(TORCH_DEVICE), labels.to(TORCH_DEVICE)
 
             optimizer.zero_grad()
             outputs = model(inputs)
-            outputs = outputs.to(torch_device)
+            outputs = outputs.to(TORCH_DEVICE)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -75,8 +72,8 @@ def train_model(
 
             if i % PRINT_TRAINING_SPAN == 0:
                 print_progress(
-                    p=experiment_parameters.p,
-                    iteration=experiment_parameters.iteration,
+                    p=experiment_params.p,
+                    iteration=experiment_params.iteration,
                     epoch=epoch + 1,
                     total_epochs=epochs,
                     total_samples=len(dataset.data.train_loader),
@@ -84,45 +81,10 @@ def train_model(
                     dataset_number=dataset.number
                 )
 
-
             running_losses.append(running_loss)
             running_loss = 0.0
 
     return running_losses
-
-def train_model_outer(
-    model: nn.Module,
-    filename: str,
-    epochs: int,
-    training_params: TrainingParameters,
-    experiment_params: ExperimentParameters,
-    learning_rate: float,
-    report: Report,
-    dry_run: bool,
-):
-    model.apply(init_weights)
-
-    model = model.to(torch_device)
-
-    running_losses = train_model(
-        model=model,
-        dataset=training_params.dataset,
-        epochs=epochs,
-        experiment_parameters=experiment_params,
-        criterion=training_params.learning_task.criterion,
-        optimizer=optim.Adam(
-            model.parameters(),
-            lr=learning_rate,
-        ),
-        dry_run=dry_run,
-    )
-
-    print(f"train_model_outer(): saved model to {filename}")
-    torch.save(model.state_dict(), filename)
-
-    report_key = f'loss_{type(model).__name__}_{training_params.dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
-
-    report.append(report_key, running_losses)
 
 def create_and_train_all_models(
     datasets: list[Dataset],
@@ -156,7 +118,7 @@ def create_and_train_all_models(
             inputs_count = training_params.dataset.features_count
             outputs_count = training_params.dataset.classes_count
 
-            for (model, name) in [
+            for (model, path) in [
                 ## Uncomment to train RegularNetwork
                 # (RegularNetwork(
                 #     inputs_count=inputs_count,
@@ -169,16 +131,35 @@ def create_and_train_all_models(
                     p=experiment_params.p
                 ), training_params.dataset.model_b_path(experiment_params))
             ]:
-                train_model_outer(
-                    model=model,
-                    filename=name,
-                    epochs=epochs,
-                    training_params=training_params,
-                    experiment_params=experiment_params,
-                    learning_rate=learning_rate,
-                    report=report,
-                    dry_run=dry_run,
-                )
+                running_losses: list[float]
 
-        # path = f'loss__p{experiment_params.p}_N{experiment_params.iteration}'
-        # print('train_main(): path = ', path)
+                if dry_run:
+                    print(f"NOTE: Training model {model} in dry run mode. No changes to weights will be applied. An array of {epochs} -1s is generated for running_losses.")
+                    running_losses = [-1.0 for _ in range(epochs)]
+                else:
+                    running_losses = train_model(
+                        model=model,
+                        dataset=training_params.dataset,
+                        epochs=epochs,
+                        experiment_params=experiment_params,
+                        criterion=training_params.learning_task.criterion,
+                        optimizer=optim.Adam(
+                            model.parameters(),
+                            lr=learning_rate,
+                        )
+                    )
+                
+                save_model_to_path(model, path)
+
+                report.record_running_losses(running_losses,
+                                             model,
+                                             training_params,
+                                             experiment_params)
+                
+
+def save_model_to_path(
+    model,
+    path,
+):
+    print(f"train_model_outer(): saved model to {path}")
+    torch.save(model.state_dict(), path)

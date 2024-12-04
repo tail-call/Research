@@ -63,7 +63,7 @@ def plot_deviant_curves_on_ax_or_plt(
             model['curve'][0.25],
             model['curve'][0.75],
             color=model['quantiles_color'],
-            alpha=0.5,
+            alpha=0.2,
             label=model['quantiles_label'],
         )
         

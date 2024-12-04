@@ -2,4 +2,4 @@
 
 import torch
 
-torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+TORCH_DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'

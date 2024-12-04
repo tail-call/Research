@@ -13,6 +13,7 @@ import cgtnnlib.Report as report
 from cgtnnlib.PlotModel import PlotModel, Measurement, Metric
 
 from cgtnnlib.Report import load_raw_report
+from cgtnnlib.plt_extras import set_title, set_xlabel, set_ylabel
 
 def df_head_fraction(df: pd.DataFrame, frac: float) -> pd.DataFrame:
     """
@@ -66,17 +67,10 @@ def plot_deviant_curves_on_ax_or_plt(
             alpha=0.2,
             label=model['quantiles_label'],
         )
-        
 
-    is_ax = hasattr(ax_or_plt, 'set_xlabel')
-    if is_ax:
-        ax_or_plt.set_xlabel(xlabel)
-        ax_or_plt.set_ylabel(ylabel)
-        ax_or_plt.set_title(title)
-    else:
-        ax_or_plt.xlabel(xlabel)
-        ax_or_plt.ylabel(ylabel)
-        ax_or_plt.title(title)
+    set_xlabel(ax_or_plt, xlabel)
+    set_ylabel(ax_or_plt, ylabel)
+    set_title(ax_or_plt, title)
 
     ax_or_plt.legend()
 

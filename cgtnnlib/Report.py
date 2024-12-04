@@ -1,6 +1,8 @@
-## Report v.0.5
+## Report v.0.6
 ## Created at Tue 26 Nov 2024
-## Modified at Thu 28 Nov 2024
+## Modified at Wed 4 Dec 2024
+## v.0.6 - .record_running_losses() now accepts a Dataset
+##          instead of a TrainingParameters (which is gone now)
 ## v.0.5 - class Report: report_running_losses()
 ## v.0.4 - RawReport, SearchIndex
 ## v.0.3 - eval_report_key()
@@ -15,10 +17,10 @@ import torch
 import numpy as np
 import pandas as pd
 
+from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.NetworkLike import NetworkLike
 from cgtnnlib.PlotModel import PlotModel
-from cgtnnlib.TrainingParameters import TrainingParameters
 
 SearchIndex: TypeAlias = pd.DataFrame
 RawReport: TypeAlias = dict[str, dict | list | str]
@@ -76,10 +78,10 @@ class Report:
         self,
         running_losses: list[float],
         model: NetworkLike,
-        training_params: TrainingParameters,
+        dataset: Dataset,
         experiment_params: ExperimentParameters,
     ):
-        key = f'loss_{type(model).__name__}_{training_params.dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
+        key = f'loss_{type(model).__name__}_{dataset.number}_p{experiment_params.p}_N{experiment_params.iteration}'
         self.append(key, running_losses)
         
 

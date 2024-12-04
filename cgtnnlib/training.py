@@ -14,9 +14,7 @@ from IPython.display import clear_output
 from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
-from cgtnnlib.LearningTask import classification_task, regression_task
 from cgtnnlib.Report import Report
-from cgtnnlib.TrainingParameters import TrainingParameters
 from cgtnnlib.torch_device import TORCH_DEVICE
 
 PRINT_TRAINING_SPAN = 500
@@ -98,25 +96,9 @@ def create_and_train_all_models(
         # fig, axs = plt.subplots(2, 3, sharey='col', figsize=(10, 12))
         # fig.set_size_inches(35, 20)
 
-        for training_params in [
-            TrainingParameters(
-                dataset=datasets[0],
-                learning_task=classification_task,
-                experiment_params=experiment_params,
-            ),
-            TrainingParameters(
-                dataset=datasets[1],
-                learning_task=classification_task,
-                experiment_params=experiment_params,
-            ),
-            TrainingParameters(
-                dataset=datasets[2],
-                learning_task=regression_task,
-                experiment_params=experiment_params,
-            )
-        ]:
-            inputs_count = training_params.dataset.features_count
-            outputs_count = training_params.dataset.classes_count
+        for dataset in datasets:
+            inputs_count = dataset.features_count
+            outputs_count = dataset.classes_count
 
             for (model, path) in [
                 ## Uncomment to train RegularNetwork
@@ -129,7 +111,7 @@ def create_and_train_all_models(
                     inputs_count=inputs_count,
                     outputs_count=outputs_count,
                     p=experiment_params.p
-                ), training_params.dataset.model_b_path(experiment_params))
+                ), dataset.model_b_path(experiment_params))
             ]:
                 running_losses: list[float]
 
@@ -139,10 +121,10 @@ def create_and_train_all_models(
                 else:
                     running_losses = train_model(
                         model=model,
-                        dataset=training_params.dataset,
+                        dataset=dataset,
                         epochs=epochs,
                         experiment_params=experiment_params,
-                        criterion=training_params.learning_task.criterion,
+                        criterion=dataset.learning_task.criterion,
                         optimizer=optim.Adam(
                             model.parameters(),
                             lr=learning_rate,

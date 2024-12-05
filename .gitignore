@@ -27,4 +27,5 @@ report-loss.json
 .DS_Store
 
 reports/*.json
+reports/*.png
 plots/*.png

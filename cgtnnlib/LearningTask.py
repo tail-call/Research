@@ -15,20 +15,20 @@ class LearningTask:
     dtype: torch.dtype
 
 
-classification_task = LearningTask(
+CLASSIFICATION_TASK = LearningTask(
     name='classification',
     criterion=nn.CrossEntropyLoss(),
     dtype=torch.long,
 )
 
-regression_task = LearningTask(
+REGRESSION_TASK = LearningTask(
     name='regression',
     criterion=nn.MSELoss(),
     dtype=torch.float,
 )
 
 def is_classification_task(task: LearningTask) -> bool:
-    return task.name == classification_task.name
+    return task.name == CLASSIFICATION_TASK.name
 
 def is_regression_task(task: LearningTask) -> bool:
-    return task.name == regression_task.name
+    return task.name == REGRESSION_TASK.name

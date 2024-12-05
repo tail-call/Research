@@ -19,14 +19,18 @@ import pandas as pd
 
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
-from cgtnnlib.NetworkLike import NetworkLike
 from cgtnnlib.PlotModel import PlotModel
+
+from cgtnnlib.nn.NetworkLike import NetworkLike
+
 
 SearchIndex: TypeAlias = pd.DataFrame
 RawReport: TypeAlias = dict[str, dict | list | str]
 
+
 def now_isoformat() -> str:
     return datetime.now().isoformat()
+
 
 def see_value(value) -> str:
     if isinstance(value, (list, np.ndarray, torch.Tensor)):
@@ -38,6 +42,7 @@ def see_value(value) -> str:
         return str(value)
     else:
         return f"{type(value).__name__}(...)"
+
 
 class Report:
     dir: str
@@ -107,6 +112,7 @@ def make_search_index(raw_report: RawReport) -> SearchIndex:
     # Remove metadata
     df = df[df['Key'] != 'started']
     df = df[df['Key'] != 'saved']
+    df = df[df['Key'] != 'comment']
 
     df.Dataset = df.Dataset.apply(lambda x: int(x))
 

@@ -10,9 +10,10 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from cgtnnlib.LearningTask import LearningTask, regression_task, classification_task
+from cgtnnlib.LearningTask import LearningTask, REGRESSION_TASK, CLASSIFICATION_TASK
 from cgtnnlib.DatasetData import DatasetData
 from cgtnnlib.Dataset import Dataset
+
 
 def download_csv(
     url: str,
@@ -70,12 +71,12 @@ def breast_cancer_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=classification_task.dtype
+            y_dtype=CLASSIFICATION_TASK.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=classification_task.dtype
+            y_dtype=CLASSIFICATION_TASK.dtype
         )
     )
 
@@ -140,12 +141,12 @@ def car_evaluation_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=classification_task.dtype
+            y_dtype=CLASSIFICATION_TASK.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=classification_task.dtype
+            y_dtype=CLASSIFICATION_TASK.dtype
         )
     )
 
@@ -214,12 +215,12 @@ def student_performance_factors_dataset(
         tensor_dataset_from_dataframe(
             df=train_df,
             target=target,
-            y_dtype=regression_task.dtype
+            y_dtype=REGRESSION_TASK.dtype
         ),
         tensor_dataset_from_dataframe(
             df=val_df,
             target=target,
-            y_dtype=regression_task.dtype
+            y_dtype=REGRESSION_TASK.dtype
         )
     )
 

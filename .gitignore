@@ -25,3 +25,6 @@ report-loss.json
 
 # macOS
 .DS_Store
+
+reports/*.json
+plots/*.png

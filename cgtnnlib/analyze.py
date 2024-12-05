@@ -2,18 +2,17 @@
 ## Created at Thu 28 Nov 2024
 ## v.0.2 search_plot_data raises IndexError on failed search
 
-from cgtnnlib.Report import make_search_index, search_plot_data
 import os
 
 from typing import Any, TypeAlias, TypedDict
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import cgtnnlib.Report as report
-from cgtnnlib.PlotModel import PlotModel, Measurement, Metric
 
-from cgtnnlib.Report import load_raw_report
+from cgtnnlib.PlotModel import PlotModel, Measurement, Metric
+from cgtnnlib.Report import make_search_index, search_plot_data, load_raw_report, SearchIndex, RawReport
 from cgtnnlib.plt_extras import set_title, set_xlabel, set_ylabel
+
 
 def df_head_fraction(df: pd.DataFrame, frac: float) -> pd.DataFrame:
     """
@@ -40,6 +39,7 @@ def plot_deviant_curves_on_ax_or_plt(
     title: str,
     xlabel: str,
     ylabel: str,
+    quantiles_alpha: float,
 ):
     if len(models) == 0:
         raise TypeError("models should not be empty")
@@ -64,7 +64,7 @@ def plot_deviant_curves_on_ax_or_plt(
             model['curve'][0.25],
             model['curve'][0.75],
             color=model['quantiles_color'],
-            alpha=0.2,
+            alpha=quantiles_alpha,
             label=model['quantiles_label'],
         )
 
@@ -99,9 +99,9 @@ class AnalysisParams(TypedDict):
 
 
 def search_curve(
-    search_index: report.SearchIndex,
+    search_index: SearchIndex,
     plot_params: PlotModel,
-    raw_report: report.RawReport,
+    raw_report: RawReport,
 ) -> pd.DataFrame:
     values = extract_values_from_search_results(
         search_results=search_plot_data(
@@ -112,7 +112,6 @@ def search_curve(
         measurement=plot_params.measurement,
         metric=plot_params.metric,
     )
-
     result = values.quantile([0.25, 0.75]).transpose()
     result['mean'] = values.mean()
 
@@ -122,8 +121,8 @@ def search_curve(
     )    
 
 def plot_analysis_fig(
-    search_index: report.SearchIndex,
-    raw_report: report.RawReport,
+    search_index: SearchIndex,
+    raw_report: RawReport,
     analysis_params_list: list[AnalysisParams]
 ) -> None:
     for analysis_params in analysis_params_list:
@@ -151,6 +150,7 @@ def plot_analysis_fig(
                     plot_params=PlotModel(
                         measurement=measurement,
                         dataset_number=dataset_number,
+                        model_name="XXX1",
                         metric=metric,
                         p=p,
                         frac=frac,
@@ -179,6 +179,7 @@ def plot_analysis_fig(
                     title=f'p = {p}',
                     xlabel=xlabel,
                     ylabel=metric,
+                    quantiles_alpha=0.1,
                 )
         fig.suptitle(f'Dataset #{dataset_number}, zoom factor: {frac}')
         plt.tight_layout()
@@ -232,7 +233,7 @@ def analyze_main(
         analysis_params_list=analysis_params_list,
     )
 
-def search_curve_for_report(
+def search_curve_in_report(
     report_path: str,
     model: PlotModel,
 ):

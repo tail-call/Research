@@ -12,6 +12,7 @@
 ## 1.4.-2 Imports
 
 import os
+
 from typing import Any
 from typing_extensions import Literal
 
@@ -20,22 +21,22 @@ from IPython.display import clear_output
 import numpy as np
 import pandas as pd
 
-from sklearn.metrics import roc_auc_score, f1_score, r2_score, mean_squared_error
+import matplotlib.pyplot as plt
 
 import torch
 import torch.nn.functional as F
 
-import matplotlib.pyplot as plt
+from sklearn.metrics import roc_auc_score, f1_score, r2_score, mean_squared_error
 
-from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
+from cgtnnlib.nn.AugmentedReLUNetwork import AugmentedReLUNetwork
+from cgtnnlib.nn.RegularNetwork import RegularNetwork
 from cgtnnlib.EvaluationParameters import EvaluationParameters
-from cgtnnlib.RegularNetwork import RegularNetwork
 from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.training import create_and_train_all_models
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.datasets import make_dataset1, make_dataset2, make_dataset3
-from cgtnnlib.LearningTask import classification_task, is_classification_task, is_regression_task, regression_task
+from cgtnnlib.LearningTask import CLASSIFICATION_TASK, is_classification_task, is_regression_task, REGRESSION_TASK
 
 ## 1.4.-1 Configuration
 
@@ -396,19 +397,19 @@ DATASETS: list[Dataset] = [
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
         random_state=RANDOM_STATE,
-        learning_task=classification_task,
+        learning_task=CLASSIFICATION_TASK,
     ),
     make_dataset2(
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
         random_state=RANDOM_STATE,
-        learning_task=classification_task,
+        learning_task=CLASSIFICATION_TASK,
     ),
     make_dataset3(
         batch_size=12,
         test_size=TEST_SAMPLE_SIZE,
         random_state=RANDOM_STATE,
-        learning_task=regression_task,
+        learning_task=REGRESSION_TASK,
     ),
 ]
 

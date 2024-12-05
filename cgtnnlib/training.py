@@ -11,11 +11,13 @@ import torch.optim as optim
 
 from IPython.display import clear_output
 
-from cgtnnlib.AugmentedReLUNetwork import AugmentedReLUNetwork
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.Report import Report
 from cgtnnlib.torch_device import TORCH_DEVICE
+
+from cgtnnlib.nn.AugmentedReLUNetwork import AugmentedReLUNetwork
+
 
 PRINT_TRAINING_SPAN = 500
 
@@ -26,11 +28,12 @@ def print_progress(
     total_epochs: int,
     total_samples: int,
     running_loss: float,
-    dataset_number: int
+    dataset_number: int,
+    model_name: str,
 ):
     clear_output(wait=True)
     print(
-        f'N={iteration} #{dataset_number} p={p} E{epoch}/{total_epochs} S{total_samples} Loss={running_loss / 100:.4f}'
+        f'N={iteration} #{dataset_number} p={p} E{epoch}/{total_epochs} S{total_samples} Loss={running_loss / 100:.4f} @{model_name}'
     )
 
 def init_weights(m: nn.Module):
@@ -76,7 +79,8 @@ def train_model(
                     total_epochs=epochs,
                     total_samples=len(dataset.data.train_loader),
                     running_loss=running_loss,
-                    dataset_number=dataset.number
+                    dataset_number=dataset.number,
+                    model_name=type(model).__name__,
                 )
 
             running_losses.append(running_loss)
@@ -135,7 +139,7 @@ def create_and_train_all_models(
 
                 report.record_running_losses(running_losses,
                                              model,
-                                             training_params,
+                                             dataset,
                                              experiment_params)
                 
 

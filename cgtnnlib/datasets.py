@@ -1,8 +1,11 @@
-## Dataset utilities v.0.1
+## Dataset utilities v.0.2
 ## Created at Tue 26 Nov 2024
+## Updated at Mon 13 Jan 2025
+## v.0.2 - sha1 hash checking to avoid duplicate downloads
 
 import os
 import urllib.request
+import hashlib
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -18,19 +21,47 @@ from cgtnnlib.Dataset import Dataset
 def download_csv(
     url: str,
     saved_name: str,
+    sha1: str,
     features: list[str] | None = None
 ) -> pd.DataFrame:
     data_dir = 'data'
     os.makedirs(data_dir, exist_ok=True)
     file_path = os.path.join(data_dir, saved_name)
 
-    urllib.request.urlretrieve(url, file_path)
+    def calculate_sha1(file_path):
+        hasher = hashlib.sha1()
+        with open(file_path, 'rb') as f:
+            while True:
+                chunk = f.read(4096)
+                if not chunk:
+                    break
+                hasher.update(chunk)
+        return hasher.hexdigest()
+
+    if os.path.exists(file_path):
+        file_sha1 = calculate_sha1(file_path)
+        if file_sha1 != sha1:
+            raise ValueError(f"SHA1 mismatch for existing file: {file_path}. Expected {sha1}, got {file_sha1}")
+        else:
+            print(f"File {file_path} exists and SHA1 matches, skipping download.")
+            if features is None:
+                return pd.read_csv(file_path)
+            else:
+                return pd.read_csv(file_path, header=None, names=features)
+    else:
+        print(f"Downloading {url} to {file_path}")
+        urllib.request.urlretrieve(url, file_path)
+        downloaded_sha1 = calculate_sha1(file_path)
+        if downloaded_sha1 != sha1:
+            os.remove(file_path)
+            raise ValueError(f"SHA1 mismatch for downloaded file: {file_path}. Expected {sha1}, got {downloaded_sha1}")
+
 
     if features is None:
-        return pd.read_csv(file_path)
+            return pd.read_csv(file_path)
     else:
-        return pd.read_csv(file_path, header=None, names=features)
-
+            return pd.read_csv(file_path, header=None, names=features)
+        
 def tensor_dataset_from_dataframe(
     df: pd.DataFrame,
     target: str,
@@ -53,7 +84,8 @@ def breast_cancer_dataset(
 ) -> tuple[TensorDataset, TensorDataset]:
     df = download_csv(
         url='https://raw.githubusercontent.com/dataspelunking/MLwR/refs/heads/master/Machine%20Learning%20with%20R%20(2nd%20Ed.)/Chapter%2003/wisc_bc_data.csv',
-        saved_name='wisc_bc_data.csv'
+        saved_name='wisc_bc_data.csv',
+        sha1='3b75f889e7e8d140b9eb28df39556b94b4331e33',
     )
 
     target = 'diagnosis'
@@ -90,7 +122,8 @@ def car_evaluation_dataset(
     df = download_csv(
         url='https://raw.githubusercontent.com/mragpavank/car-evaluation-dataset/refs/heads/master/car_evaluation.csv',
         saved_name='car_evaluation.csv',
-        features=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'class']
+        sha1='985852bc1bb34d7cb3c192d6b8e7127cc743e176',
+        features=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'class'],
     )
 
     target = 'class'

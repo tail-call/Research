@@ -2,4 +2,9 @@
 
 import torch
 
-TORCH_DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+if torch.cuda.is_available():
+    TORCH_DEVICE = 'cuda'
+elif torch.backends.mps.is_available():
+    TORCH_DEVICE = 'mps'
+else:
+    TORCH_DEVICE = 'cpu'

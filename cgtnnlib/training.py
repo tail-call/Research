@@ -43,7 +43,7 @@ def init_weights(m: nn.Module):
 
 
 def train_model(
-    model,
+    model: nn.Module,
     dataset: Dataset,
     epochs: int,
     experiment_params: ExperimentParameters,
@@ -60,6 +60,9 @@ def train_model(
 
         model.train()
 
+        inputs: torch.Tensor
+        outputs: torch.Tensor
+        labels: torch.Tensor
         for i, (inputs, labels) in enumerate(dataset.data.train_loader):
             inputs, labels = inputs.to(TORCH_DEVICE), labels.to(TORCH_DEVICE)
 

@@ -1,6 +1,7 @@
-## COMMON LIBRARY v.0.8
+## COMMON LIBRARY v.0.9
 ## Created at Sat 23 Nov 2024
-## Updated at Wed 27 Nov 2024
+## Updated at Tue 14 Jan 2025
+## v.0.9 - remove DATASETS
 ## v.0.8 - evaluate_main()
 ## v.0.7 - training.py
 ## v.0.6 - even more classes within their own files
@@ -35,19 +36,16 @@ from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.training import create_and_train_all_models
 from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
-from cgtnnlib.datasets import make_dataset1, make_dataset2, make_dataset3
-from cgtnnlib.LearningTask import CLASSIFICATION_TASK, is_classification_task, is_regression_task, REGRESSION_TASK
+from cgtnnlib.datasets import datasets
+from cgtnnlib.LearningTask import is_classification_task, is_regression_task
 
 ## 1.4.-1 Configuration
 
-DRY_RUN = False
+DRY_RUN = True
 
 REPORT_DIR = "report/"
 
-TEST_SAMPLE_SIZE = 0.2
 ITERATIONS = 10
-RANDOM_STATE = 23432
-BATCH_SIZE = 12
 EPOCHS = 20
 LEARNING_RATE = 0.00011
 PP = [0, 0.01, 0.05, 0.5, 0.9, 0.95, 0.99]
@@ -350,34 +348,34 @@ def evaluate(
 
     eval_params_items: list[EvaluationParameters] = [
         EvaluationParameters(
-            DATASETS[0],
-            model_path_for(model_a_or_b, DATASETS[0], experiment_params),
+            datasets[0],
+            model_path_for(model_a_or_b, datasets[0], experiment_params),
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
-                dataset_number=DATASETS[0].number,
+                dataset_number=datasets[0].number,
                 p=experiment_params.p,
                 iteration=experiment_params.iteration,
             )
         ),
         EvaluationParameters(
-            DATASETS[1],
-            model_path_for(model_a_or_b, DATASETS[1], experiment_params),
+            datasets[1],
+            model_path_for(model_a_or_b, datasets[1], experiment_params),
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
-                dataset_number=DATASETS[1].number,
+                dataset_number=datasets[1].number,
                 p=experiment_params.p,
                 iteration=experiment_params.iteration,
             )
         ),
         EvaluationParameters(
-            DATASETS[2],
-            model_path_for(model_a_or_b, DATASETS[2], experiment_params),
+            datasets[2],
+            model_path_for(model_a_or_b, datasets[2], experiment_params),
             experiment_parameters=experiment_params,
             report_key=eval_report_key(
                 model_name=constructor.__name__,
-                dataset_number=DATASETS[2].number,
+                dataset_number=datasets[2].number,
                 p=experiment_params.p,
                 iteration=experiment_params.iteration,
             )
@@ -392,30 +390,9 @@ def evaluate(
             constructor
         )
 
-DATASETS: list[Dataset] = [
-    make_dataset1(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE,
-        learning_task=CLASSIFICATION_TASK,
-    ),
-    make_dataset2(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE,
-        learning_task=CLASSIFICATION_TASK,
-    ),
-    make_dataset3(
-        batch_size=12,
-        test_size=TEST_SAMPLE_SIZE,
-        random_state=RANDOM_STATE,
-        learning_task=REGRESSION_TASK,
-    ),
-]
-
 def train_main():
     create_and_train_all_models(
-        datasets=DATASETS,
+        datasets=datasets,
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
         report=report,
@@ -440,7 +417,7 @@ if __name__ == "__main__":
     print('# py')
     print('')
     print('Datasets:')
-    for dataset in DATASETS:
+    for dataset in datasets:
         print(f"{dataset.number}) {dataset.name}: {dataset.features_count} features, {dataset.classes_count} classes")
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
-## Dataset utilities v.0.2
+## Dataset utilities v.0.3
 ## Created at Tue 26 Nov 2024
-## Updated at Mon 13 Jan 2025
+## Updated at Tue 14 Jan 2024
+## v.0.3 - Drop make_datasetN() functions in favor of datasets list
 ## v.0.2 - sha1 hash checking to avoid duplicate downloads
 
 import os
@@ -11,12 +12,14 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 import torch
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import TensorDataset
 
-from cgtnnlib.LearningTask import LearningTask, REGRESSION_TASK, CLASSIFICATION_TASK
-from cgtnnlib.DatasetData import DatasetData
+from cgtnnlib.LearningTask import REGRESSION_TASK, CLASSIFICATION_TASK
 from cgtnnlib.Dataset import Dataset
 
+TEST_SAMPLE_SIZE = 0.2
+RANDOM_STATE = 23432
+BATCH_SIZE = 12
 
 def download_csv(
     url: str,
@@ -257,102 +260,35 @@ def student_performance_factors_dataset(
         )
     )
 
-## 1.4.8 Dataset factories
-
-def make_dataset1(
-    batch_size: int,
-    test_size: float,
-    random_state: int,
-    learning_task: LearningTask,
-) -> Dataset:
-    train_dataset, test_dataset = breast_cancer_dataset(
-        test_size=test_size,
-        random_state=random_state,
-    )
-
-    return Dataset(
+datasets: list[Dataset] = [
+    Dataset(
         name='wisc_bc_data.csv',
-        learning_task=learning_task,
+        learning_task=CLASSIFICATION_TASK,
         number=1,
         classes_count=2,
-        data=DatasetData(
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-            train_loader=DataLoader(
-                train_dataset,
-                batch_size=batch_size,
-                shuffle=True,
-            ),
-            test_loader=DataLoader(
-                test_dataset,
-                batch_size=batch_size,
-                shuffle=False,
-            )
-        )
-    )
-
-def make_dataset2(
-    batch_size: int,
-    test_size: float,
-    random_state: int,
-    learning_task: LearningTask,
-) -> Dataset:
-    train_dataset, test_dataset = car_evaluation_dataset(
-        test_size=test_size,
-        random_state=random_state,
-    )
-
-    return Dataset(
-        name='car_evaluation.csv',
-        learning_task=learning_task,
+        batch_size=BATCH_SIZE,
+        random_state=RANDOM_STATE,
+        test_size=TEST_SAMPLE_SIZE,
+        data_maker=car_evaluation_dataset,
+    ),
+    Dataset(
         number=2,
+        name='car_evaluation.csv',
+        learning_task=CLASSIFICATION_TASK,
         classes_count=4,
-        data=DatasetData(
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-            train_loader=DataLoader(
-                train_dataset,
-                batch_size=batch_size,
-                shuffle=True
-            ),
-            test_loader=DataLoader(
-                test_dataset,
-                batch_size=batch_size,
-                shuffle=False
-            )
-        )
-    )
-
-def make_dataset3(
-    batch_size: int,
-    test_size: float,
-    random_state: int,
-    learning_task: LearningTask,
-) -> Dataset:
-    # ::: Use lazy evaluation?..
-    train_dataset, test_dataset = student_performance_factors_dataset(
-        test_size=test_size,
-        random_state=random_state,
-    )
-
-    return Dataset(
-        name='StudentPerformanceFactors.csv',
-        learning_task=learning_task,
+        batch_size=BATCH_SIZE,
+        random_state=RANDOM_STATE,
+        test_size=TEST_SAMPLE_SIZE,
+        data_maker=car_evaluation_dataset,
+    ),
+    Dataset(
         number=3,
+        name='StudentPerformanceFactors.csv',
+        learning_task=REGRESSION_TASK,
         classes_count=1,
-        data=DatasetData(
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-            train_loader=DataLoader(
-                train_dataset,
-                batch_size=batch_size,
-                shuffle=True
-            ),
-            test_loader=DataLoader(
-                test_dataset,
-                batch_size=batch_size,
-                shuffle=False
-            )
-        )
-    )
-
+        batch_size=BATCH_SIZE,
+        random_state=RANDOM_STATE,
+        test_size=TEST_SAMPLE_SIZE,
+        data_maker=student_performance_factors_dataset,
+    ),
+]

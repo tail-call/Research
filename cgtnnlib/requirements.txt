@@ -66,6 +66,7 @@ parso==0.8.4
 pexpect==4.9.0
 pillow==10.4.0
 platformdirs==4.3.3
+pmlb==1.0.1.post3
 portalocker==3.0.0
 preshed==3.0.9
 prompt_toolkit==3.0.47

@@ -5,13 +5,15 @@
 from dataclasses import dataclass
 from typing import Callable, Union
 
+from torch.utils.data import TensorDataset, DataLoader
+
 from cgtnnlib.LearningTask import LearningTask
 
 from cgtnnlib.DatasetData import DatasetData
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.nn.NetworkLike import NetworkLike
 
-from torch.utils.data import TensorDataset, DataLoader
+from cgtnnlib.constants import BATCH_SIZE, RANDOM_STATE, TEST_SAMPLE_SIZE
 
 @dataclass
 class Dataset:
@@ -20,9 +22,6 @@ class Dataset:
     learning_task: LearningTask
     # ::: can be derived from DatasetData
     classes_count: int
-    batch_size: int
-    random_state: int
-    test_size: float
     data_maker: Callable[[float, int], tuple[TensorDataset, TensorDataset]]
 
     _data: Union[DatasetData, None] = None
@@ -48,19 +47,19 @@ class Dataset:
     @property
     def data(self) -> DatasetData:
         if self._data is None:
-            train, test = self.data_maker(self.test_size, self.random_state)
+            train, test = self.data_maker(TEST_SAMPLE_SIZE, RANDOM_STATE)
             
             self._data = DatasetData(
                 train_dataset=train,
                 test_dataset=test,
                 train_loader=DataLoader(
                     train,
-                    batch_size=self.batch_size,
+                    batch_size=BATCH_SIZE,
                     shuffle=True,
                 ),
                 test_loader=DataLoader(
                     test,
-                    batch_size=self.batch_size,
+                    batch_size=BATCH_SIZE,
                     shuffle=False,
                 ),
             )

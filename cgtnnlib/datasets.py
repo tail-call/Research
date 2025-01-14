@@ -9,17 +9,22 @@ import urllib.request
 import hashlib
 
 import pandas as pd
+
 from sklearn.model_selection import train_test_split
 
 import torch
 from torch.utils.data import TensorDataset
 
+from pmlb import fetch_data
+
 from cgtnnlib.LearningTask import REGRESSION_TASK, CLASSIFICATION_TASK
 from cgtnnlib.Dataset import Dataset
+from cgtnnlib.constants import DATA_DIR, PMLB_TARGET_COL
 
-TEST_SAMPLE_SIZE = 0.2
-RANDOM_STATE = 23432
-BATCH_SIZE = 12
+# ::: Here can't be a good place for this
+os.makedirs(DATA_DIR, exist_ok=True)
+
+## CSV sources
 
 def download_csv(
     url: str,
@@ -27,9 +32,7 @@ def download_csv(
     sha1: str,
     features: list[str] | None = None
 ) -> pd.DataFrame:
-    data_dir = 'data'
-    os.makedirs(data_dir, exist_ok=True)
-    file_path = os.path.join(data_dir, saved_name)
+    file_path = os.path.join(DATA_DIR, saved_name)
 
     def calculate_sha1(file_path):
         hasher = hashlib.sha1()
@@ -61,10 +64,18 @@ def download_csv(
 
 
     if features is None:
-            return pd.read_csv(file_path)
+        return pd.read_csv(file_path)
     else:
-            return pd.read_csv(file_path, header=None, names=features)
+        return pd.read_csv(file_path, header=None, names=features)
         
+
+def download_pmlb(dataset_name: str) -> pd.DataFrame:
+    return fetch_data(dataset_name, return_X_y=False, local_cache_dir=DATA_DIR)
+
+
+## Utils
+
+
 def tensor_dataset_from_dataframe(
     df: pd.DataFrame,
     target: str,
@@ -79,9 +90,37 @@ def tensor_dataset_from_dataframe(
     return TensorDataset(X_tensor, y_tensor)
 
 
-## 1.4.5 Dataset #1
+def tensorize_and_split(
+    df: pd.DataFrame,
+    target: str,
+    y_dtype: torch.dtype,
+    test_size: float,
+    random_state: int,
+) -> tuple[TensorDataset, TensorDataset]:
+    train_df, val_df = train_test_split(
+        df,
+        test_size=test_size,
+        random_state=random_state
+    )
 
-def breast_cancer_dataset(
+    return (
+        tensor_dataset_from_dataframe(
+            df=train_df,
+            target=target,
+            y_dtype=y_dtype,
+        ),
+        tensor_dataset_from_dataframe(
+            df=val_df,
+            target=target,
+            y_dtype=y_dtype
+        )
+    )
+
+
+## Dataset #1
+
+
+def breast_cancer(
     test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
@@ -96,29 +135,19 @@ def breast_cancer_dataset(
     df[target] = df[target].map({ 'M': 0, 'B': 1 })
     df = df.drop(columns=['id'])
 
-    train_df, val_df = train_test_split(
+    return tensorize_and_split(
         df,
+        target=target,
+        y_dtype=CLASSIFICATION_TASK.dtype,
         test_size=test_size,
-        random_state=random_state
-    )
-
-    return (
-        tensor_dataset_from_dataframe(
-            df=train_df,
-            target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
-        ),
-        tensor_dataset_from_dataframe(
-            df=val_df,
-            target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
-        )
+        random_state=random_state,
     )
 
 
-## 1.4.6 Dataset #2
+## Dataset #2
 
-def car_evaluation_dataset(
+
+def car_evaluation(
     test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
@@ -168,30 +197,23 @@ def car_evaluation_dataset(
         'big': 2
     })
 
-    train_df, val_df = train_test_split(
+    return tensorize_and_split(
         df,
+        target=target,
+        y_dtype=CLASSIFICATION_TASK.dtype,
         test_size=test_size,
-        random_state=random_state
-    )
-    return (
-        tensor_dataset_from_dataframe(
-            df=train_df,
-            target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
-        ),
-        tensor_dataset_from_dataframe(
-            df=val_df,
-            target=target,
-            y_dtype=CLASSIFICATION_TASK.dtype
-        )
+        random_state=random_state,
     )
 
-## 1.4.7 Dataset #3
 
-def student_performance_factors_dataset(
+## Dataset #3
+
+
+def student_performance_factors(
     test_size: float,
     random_state: int,
 ) -> tuple[TensorDataset, TensorDataset]:
+    # It's stored in the repo
     df = pd.read_csv('data/StudentPerformanceFactors.csv')
 
     target = 'Exam_Score'
@@ -241,54 +263,58 @@ def student_performance_factors_dataset(
         'Male': -1,
     }).fillna(0)
 
-    train_df, val_df = train_test_split(
+    return tensorize_and_split(
         df,
+        target=target,
+        y_dtype=REGRESSION_TASK.dtype,
         test_size=test_size,
-        random_state=random_state
+        random_state=random_state,
     )
 
-    return (
-        tensor_dataset_from_dataframe(
-            df=train_df,
-            target=target,
-            y_dtype=REGRESSION_TASK.dtype
-        ),
-        tensor_dataset_from_dataframe(
-            df=val_df,
-            target=target,
-            y_dtype=REGRESSION_TASK.dtype
-        )
+
+## Dataset #4
+
+
+def all_hyper(
+    test_size: float,
+    random_state: int,
+):
+    return tensorize_and_split(
+        download_pmlb('allhyper'),
+        target=PMLB_TARGET_COL,
+        y_dtype=REGRESSION_TASK.dtype,
+        test_size=test_size,
+        random_state=random_state,
     )
+
 
 datasets: list[Dataset] = [
     Dataset(
-        name='wisc_bc_data.csv',
-        learning_task=CLASSIFICATION_TASK,
         number=1,
+        name='wisc_bc_data',
+        learning_task=CLASSIFICATION_TASK,
         classes_count=2,
-        batch_size=BATCH_SIZE,
-        random_state=RANDOM_STATE,
-        test_size=TEST_SAMPLE_SIZE,
-        data_maker=car_evaluation_dataset,
+        data_maker=breast_cancer,
     ),
     Dataset(
         number=2,
-        name='car_evaluation.csv',
+        name='car_evaluation',
         learning_task=CLASSIFICATION_TASK,
         classes_count=4,
-        batch_size=BATCH_SIZE,
-        random_state=RANDOM_STATE,
-        test_size=TEST_SAMPLE_SIZE,
-        data_maker=car_evaluation_dataset,
+        data_maker=car_evaluation,
     ),
     Dataset(
         number=3,
-        name='StudentPerformanceFactors.csv',
+        name='StudentPerformanceFactors',
         learning_task=REGRESSION_TASK,
         classes_count=1,
-        batch_size=BATCH_SIZE,
-        random_state=RANDOM_STATE,
-        test_size=TEST_SAMPLE_SIZE,
-        data_maker=student_performance_factors_dataset,
+        data_maker=student_performance_factors,
+    ),
+    Dataset(
+        number=4,
+        name='allhyper',
+        learning_task=REGRESSION_TASK,
+        classes_count=1,
+        data_maker=all_hyper,
     ),
 ]

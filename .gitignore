@@ -29,3 +29,6 @@ report-loss.json
 reports/*.json
 reports/*.png
 plots/*.png
+
+# PMLB cached data
+*.tsv.gz

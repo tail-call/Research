@@ -1,6 +1,7 @@
-## Report v.0.6
+## Report v.0.7
 ## Created at Tue 26 Nov 2024
-## Modified at Wed 4 Dec 2024
+## Modified at Wed 15 Jan 2025
+## v.0.7 - Load report data from file on initialization
 ## v.0.6 - .record_running_losses() now accepts a Dataset
 ##          instead of a TrainingParameters (which is gone now)
 ## v.0.5 - class Report: report_running_losses()
@@ -52,6 +53,10 @@ class Report:
     
     def __init__(self, dir: str):
         self.dir = dir
+        if os.path.exists(self.path):
+            print(f"Report found at {self.path}. Loading...")
+            self.raw = load_raw_report(self.path)
+            print("Report loaded.")
     
     @property 
     def filename(self):

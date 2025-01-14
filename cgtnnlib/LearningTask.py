@@ -1,4 +1,5 @@
-## 1.4.3 Learning task types
+## LearningTask v.0.1
+## Updated at Wed 15 Jan 2025
 
 from typing import Literal, TypeAlias
 from dataclasses import dataclass
@@ -13,6 +14,15 @@ class LearningTask:
     name: LearningTaskName
     criterion: nn.CrossEntropyLoss | nn.MSELoss
     dtype: torch.dtype
+    
+    def metrics(self):
+        match self.name:
+            case 'regression':
+                return ['r2', 'mse']
+            case 'classification':
+                return ['f1', 'accuracy', 'roc_auc']
+            case _:
+                raise TypeError(f'bad task name: {self.name}')
 
 
 CLASSIFICATION_TASK = LearningTask(

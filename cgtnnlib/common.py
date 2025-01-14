@@ -1,6 +1,7 @@
-## COMMON LIBRARY v.0.9
+## COMMON LIBRARY v.0.10
 ## Created at Sat 23 Nov 2024
-## Updated at Tue 14 Jan 2025
+## Updated at Wed 15 Jan 2025
+## v.0.10 - Explicit datasets and pp parameters for main functions
 ## v.0.9 - remove DATASETS
 ## v.0.8 - evaluate_main()
 ## v.0.7 - training.py
@@ -41,14 +42,13 @@ from cgtnnlib.LearningTask import is_classification_task, is_regression_task
 
 ## 1.4.-1 Configuration
 
-DRY_RUN = True
+DRY_RUN = False
 
 REPORT_DIR = "report/"
 
 ITERATIONS = 10
 EPOCHS = 20
 LEARNING_RATE = 0.00011
-PP = [0, 0.01, 0.05, 0.5, 0.9, 0.95, 0.99]
 
 NOISE_SAMPLES_COUNT = 50
 NOISE_FACTORS = [
@@ -85,9 +85,9 @@ def plot_loss_curve(
     ax.set_title(f'Loss curve: {model_name} on {dataset_name} (#{dataset_number}), p = {p}, N = {iteration}')
     ax.legend()
 
-def iterate_experiment_parameters():
+def iterate_experiment_parameters(pp: list[float]):
     for iteration in range(0, ITERATIONS):
-        for p in PP:
+        for p in pp:
             yield ExperimentParameters(iteration, p)
 
 ## 1.4.11 Evaluation
@@ -307,13 +307,6 @@ def eval_inner(
         )
         print('Evaluation of classification (head):')
         print(df.head())
-        # plot_evaluation_of_classification(
-        #     df=df,
-        #     accuracy_ax=_.accuracy_ax,
-        #     f1_ax=_.f1_ax,
-        #     roc_auc_ax=_.roc_auc_ax,
-        #     title=plot_title
-        # )
     elif is_regression_task(eval_params.task):
         df = evaluate_regression_model(
             evaluated_model=evaluated_model,
@@ -322,65 +315,34 @@ def eval_inner(
         )
         print('Evaluation of regression (head):')
         print(df.head())
-        # plot_evaluation_of_regression(
-        #     df=df,
-        #     mse_ax=_.mse_ax,
-        #     r2_ax=_.r2_ax,
-        #     title=plot_title
-        # )
     else:
         raise ValueError(f"Unknown task: {eval_params.task}")
 
 def evaluate(
-    model_a_or_b: Literal["A", "B"],
-    constructor: type,
-    experiment_params: ExperimentParameters
+    experiment_params: ExperimentParameters,
+    datasets: list[Dataset]
 ):
     """
-    Оценивает модель `"A"` (`RegularNetwork`) или `"B"`
-    (`AugmentedReLUNetwork`) согласно параметрам `experiment_params` на
-    наборах данных из `DATASETS`.
-    Рисует графики метрик и сохраняет их на диск.
+    Оценивает модель `"B"` (`AugmentedReLUNetwork`) согласно параметрам
+    эксперимента `experiment_params` на наборах данных из `datasets`.
     
     - `constructor` может быть `RegularNetwork` или `AugmentedReLUNetwork`
       и должен соответствовать переданному `model_a_or_b`.
     """
 
-    eval_params_items: list[EvaluationParameters] = [
-        EvaluationParameters(
-            datasets[0],
-            model_path_for(model_a_or_b, datasets[0], experiment_params),
-            experiment_parameters=experiment_params,
-            report_key=eval_report_key(
-                model_name=constructor.__name__,
-                dataset_number=datasets[0].number,
-                p=experiment_params.p,
-                iteration=experiment_params.iteration,
-            )
-        ),
-        EvaluationParameters(
-            datasets[1],
-            model_path_for(model_a_or_b, datasets[1], experiment_params),
-            experiment_parameters=experiment_params,
-            report_key=eval_report_key(
-                model_name=constructor.__name__,
-                dataset_number=datasets[1].number,
-                p=experiment_params.p,
-                iteration=experiment_params.iteration,
-            )
-        ),
-        EvaluationParameters(
-            datasets[2],
-            model_path_for(model_a_or_b, datasets[2], experiment_params),
-            experiment_parameters=experiment_params,
-            report_key=eval_report_key(
-                model_name=constructor.__name__,
-                dataset_number=datasets[2].number,
-                p=experiment_params.p,
-                iteration=experiment_params.iteration,
-            )
-        ),
-    ]
+    constructor=AugmentedReLUNetwork
+
+    eval_params_items: list[EvaluationParameters] = [EvaluationParameters(
+        dataset,
+        model_path_for('B', dataset, experiment_params),
+        experiment_parameters=experiment_params,
+        report_key=eval_report_key(
+            model_name=constructor.__name__,
+            dataset_number=dataset.number,
+            p=experiment_params.p,
+            iteration=experiment_params.iteration,
+        )
+    ) for dataset in datasets]
     
 
     for (i, eval_params) in enumerate(eval_params_items):
@@ -390,27 +352,27 @@ def evaluate(
             constructor
         )
 
-def train_main():
+def train_main(
+    pp: list[float],
+    datasets: list[Dataset],
+):
     create_and_train_all_models(
         datasets=datasets,
         epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
         report=report,
         dry_run=DRY_RUN,
-        experiment_params_iter=iterate_experiment_parameters()
+        experiment_params_iter=iterate_experiment_parameters(pp)
     )
 
-def evaluate_main():
-    for experiment_params in iterate_experiment_parameters():
-        # evaluate(
-        #     model_a_or_b='A',
-        #     constructor=RegularNetwork,
-        #     experiment_params=experiment_params
-        # )
+def evaluate_main(
+    pp: list[float],
+    datasets: list[Dataset],
+):
+    for experiment_params in iterate_experiment_parameters(pp):
         evaluate(
-            model_a_or_b='B',
-            constructor=AugmentedReLUNetwork,
-            experiment_params=experiment_params
+            experiment_params=experiment_params,
+            datasets=datasets,
         )
 
 if __name__ == "__main__":
@@ -420,6 +382,6 @@ if __name__ == "__main__":
     for dataset in datasets:
         print(f"{dataset.number}) {dataset.name}: {dataset.features_count} features, {dataset.classes_count} classes")
 
-if __name__ == '__main__':
-    train_main()
-    evaluate_main()
+# if __name__ == '__main__':
+#     train_main()
+#     evaluate_main()

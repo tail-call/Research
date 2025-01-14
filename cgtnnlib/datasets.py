@@ -1,6 +1,8 @@
-## Dataset utilities v.0.3
+## Dataset utilities v.0.4
 ## Created at Tue 26 Nov 2024
 ## Updated at Tue 14 Jan 2024
+## v.0.4 - new datasets: eye_movements, wine_quality,
+##                       Hill_Valley_with_noise, Hill_Valley_without_noise
 ## v.0.3 - Drop make_datasetN() functions in favor of datasets list
 ## v.0.2 - sha1 hash checking to avoid duplicate downloads
 
@@ -119,7 +121,6 @@ def tensorize_and_split(
 
 ## Dataset #1
 
-
 def breast_cancer(
     test_size: float,
     random_state: int,
@@ -145,7 +146,6 @@ def breast_cancer(
 
 
 ## Dataset #2
-
 
 def car_evaluation(
     test_size: float,
@@ -207,7 +207,6 @@ def car_evaluation(
 
 
 ## Dataset #3
-
 
 def student_performance_factors(
     test_size: float,
@@ -274,19 +273,85 @@ def student_performance_factors(
 
 ## Dataset #4
 
-
 def all_hyper(
     test_size: float,
     random_state: int,
 ):
     return tensorize_and_split(
-        download_pmlb('allhyper'),
+        df=download_pmlb('allhyper'),
         target=PMLB_TARGET_COL,
         y_dtype=REGRESSION_TASK.dtype,
         test_size=test_size,
         random_state=random_state,
     )
 
+
+## Dataset #5
+
+def eye_movements(
+    test_size: float,
+    random_state: int,
+):
+    return tensorize_and_split(
+        df=download_csv(
+            url='https://huggingface.co/datasets/inria-soda/tabular-benchmark/raw/dabc0f5cea2459217a54bf275227e68cda218e9d/clf_cat/eye_movements.csv',
+            saved_name='eye_movements.csv',
+            sha1='4ed08bb19912a220a18fa0399821e3ee57dc1094',
+        ),
+        target='label',
+        y_dtype=CLASSIFICATION_TASK.dtype,
+        test_size=test_size,
+        random_state=random_state,
+    )
+
+
+## Dataset #6
+
+def wine_quality(
+    test_size: float,
+    random_state: int,  
+):
+    return tensorize_and_split(
+        df=download_csv(
+            url='https://huggingface.co/datasets/inria-soda/tabular-benchmark/raw/dabc0f5cea2459217a54bf275227e68cda218e9d/reg_num/wine_quality.csv',
+            saved_name='wine_quality.csv',
+            sha1='83caedd8c35eba2146ea8eaf9f1d1dfa208f50ec',
+        ),
+        target='quality',
+        y_dtype=REGRESSION_TASK.dtype,
+        test_size=test_size,
+        random_state=random_state,
+    )
+    
+    
+## Dataset #7
+
+def hill_valley_with_noise(
+    test_size: float,
+    random_state: int,  
+):
+    return tensorize_and_split(
+        df=download_pmlb('Hill_Valley_with_noise'),
+        target=PMLB_TARGET_COL,
+        y_dtype=CLASSIFICATION_TASK.dtype,
+        test_size=test_size,
+        random_state=random_state,
+    )
+
+
+## Dataset #8
+
+def hill_valley_without_noise(
+    test_size: float,
+    random_state: int,  
+):
+    return tensorize_and_split(
+        df=download_pmlb('Hill_Valley_without_noise'),
+        target=PMLB_TARGET_COL,
+        y_dtype=CLASSIFICATION_TASK.dtype,
+        test_size=test_size,
+        random_state=random_state,
+    )
 
 datasets: list[Dataset] = [
     Dataset(
@@ -316,5 +381,33 @@ datasets: list[Dataset] = [
         learning_task=REGRESSION_TASK,
         classes_count=1,
         data_maker=all_hyper,
+    ),
+    Dataset(
+        number=5,
+        name='eye_movements',
+        learning_task=CLASSIFICATION_TASK,
+        classes_count=2,
+        data_maker=eye_movements,
+    ),
+    Dataset(
+        number=6,
+        name='wine_quality',
+        learning_task=REGRESSION_TASK,
+        classes_count=1,
+        data_maker=wine_quality,
+    ),
+    Dataset(
+        number=7,
+        name='Hill_Valley_with_noise',
+        learning_task=CLASSIFICATION_TASK,
+        classes_count=2,
+        data_maker=hill_valley_with_noise,
+    ),
+    Dataset(
+        number=8,
+        name='Hill_Valley_without_noise',
+        learning_task=CLASSIFICATION_TASK,
+        classes_count=2,
+        data_maker=hill_valley_without_noise,
     ),
 ]

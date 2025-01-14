@@ -1,7 +1,7 @@
 # Описания датасетов
 
 
-## 1.  wisc_bc_data.csv
+## 1.  wisc_bc_data
 
 - **Источник:** [UCI Machine Learning Repository | Breast Cancer Wisconsin (Diagnostic)](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
 - **Примеры:** 569
@@ -10,7 +10,7 @@
 
 Примеры получены из оцифрованных изображений тонкоигольных аспиратов образований молочной железы. Примеры отражают характеристики клеточных ядер, такие как радиус, текстура, периметр, площадь, гладкость и другие. С каждым примером ассоциирован диагноз, относящий исследованную опухоль к злокачественной (M, 212 примеров) либо к доброкачественной (B, 357 примеров). Простой статистический анализ приведён в таблице 1.1.
 
-*Таблица 1.1. df.describe() для wisc_bc_data.csv*
+*Таблица 1.1. df.describe() для wisc_bc_data*
 
 |      |               id |   radius_mean |   texture_mean |   perimeter_mean |   area_mean |   smoothness_mean |   compactness_mean |   concavity_mean |   points_mean |   symmetry_mean |   dimension_mean |   radius_se |   texture_se |   perimeter_se |   area_se |   smoothness_se |   compactness_se |   concavity_se |    points_se |   symmetry_se |   dimension_se |   radius_worst |   texture_worst |   perimeter_worst |   area_worst |   smoothness_worst |   compactness_worst |   concavity_worst |   points_worst |   symmetry_worst |   dimension_worst |
 |:------|-----------------:|--------------:|---------------:|-----------------:|------------:|------------------:|-------------------:|-----------------:|--------------:|----------------:|-----------------:|------------:|-------------:|---------------:|----------:|----------------:|-----------------:|---------------:|-------------:|--------------:|---------------:|---------------:|----------------:|------------------:|-------------:|-------------------:|--------------------:|------------------:|---------------:|-----------------:|------------------:|
@@ -39,7 +39,7 @@
 Возможный источник шума в этом датасете - колонка id, содержащая возрастающие целые числа, никак не влияющие на целевую переменную. В эксперименте это учтено.
 
 
-## 2. car_evaluation.csv
+## 2. car_evaluation
 
 - **Источник:** [UCI Machine Learning Repository | Car Evaluation](https://archive.ics.uci.edu/dataset/19/car+evaluation)
 - **Примеры:** 1728
@@ -50,7 +50,7 @@
 
 Особенность датасета — в нём есть только категориальные значения и нет численных.
 
-*Таблица 2.1. df.describe() для car_evaluation.csv: *top* — наиболее часто встречающееся значение, freq — частота наиболее частого значения*
+*Таблица 2.1. df.describe() для car_evaluation: *top* — наиболее часто встречающееся значение, freq — частота наиболее частого значения*
 
 |        | buying   | maint   |   doors |   persons | lug_boot   | safety   | class   |
 |:-------|:---------|:--------|--------:|----------:|:-----------|:---------|:--------|
@@ -69,7 +69,9 @@
 import pandas as pd
 df = pd.read_csv('data/car_evaluation.csv')
 print(df.sample(n=3).to_markdown())
-## 3. StudentPerformanceFactors.csv
+
+
+## 3. StudentPerformanceFactors
 
 - **Источник:** [Kaggle | Student Performance Factors](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/data)
 - **Примеры:** 6607
@@ -79,7 +81,7 @@ print(df.sample(n=3).to_markdown())
 Этот [синтетический](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/discussion/532279#3001125) датасет моделирует успеваемость учащихся в зависимости от многих факторов: количества часов обучения в неделю, доступ к интернету, тип школы — частная или муниципальная, — пол ученика, доход семьи и других. Целевая переменная — оценка на экзамене.
 
 
-*Таблица 3.1. df.describe() для StudentPerformanceFactors.csv, численные значения*
+*Таблица 3.1. df.describe() для StudentPerformanceFactors, численные значения*
 |       |   Hours_Studied |   Attendance |   Sleep_Hours |   Previous_Scores |   Tutoring_Sessions |   Physical_Activity |   Exam_Score |
 |:------|----------------:|-------------:|--------------:|------------------:|--------------------:|--------------------:|-------------:|
 | mean  |        19.9753  |      79.9774 |       7.02906 |           75.0705 |             1.49372 |             2.96761 |     67.2357  |
@@ -115,6 +117,39 @@ print(df.sample(n=3).to_markdown())
 - **Задача:** регрессия
 
 Анализ см. в источнике.
+
+
+## 5. eye_movements
+
+- **Источник:** [HuggingFace | inria-soda:tabular-benchmark/clf_cat/](https://huggingface.co/datasets/inria-soda/tabular-benchmark/tree/dabc0f5cea2459217a54bf275227e68cda218e9d/clf_cat)
+- **Примеры:** 7608
+- **Признаки:** 23
+- **Задача:** классификация
+
+
+## 6. wine_quality
+
+- **Источник:** [HuggingFace | inria-soda:tabular-benchmark/num_reg/](https://huggingface.co/datasets/inria-soda/tabular-benchmark/tree/dabc0f5cea2459217a54bf275227e68cda218e9d/reg_num)
+- **Примеры:** 6497
+- **Признаки:** 11
+- **Задача:** регрессия
+
+
+## 7. Hill_Valley_with_noise
+
+- **Источник:** [PMLB | Hill_Valley_with_noise](https://epistasislab.github.io/pmlb/profile/Hill_Valley_with_noise.html)
+- **Примеры:** 1212
+- **Признаки:** 20 
+- **Задача:** классификация
+
+
+## 8. Hill_Valley_without_noise
+
+- **Источник:** [PMLB | Hill_Valley_without_noise](https://epistasislab.github.io/pmlb/profile/Hill_Valley_without_noise.html)
+- **Примеры:** 1212
+- **Признаки:** 20
+- **Задача:** классификация
+
 
 ## Использованная литература
 

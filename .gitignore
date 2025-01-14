@@ -7,9 +7,11 @@ data/MNIST
 # Python bytecode cache
 *.pyc
 
-# These have been downloaded by hypertrain*.ipynb
+# These have been downloaded by cgtnnlib
 wisc_bc_data.csv
 car_evaluation.csv
+eye_movements.csv
+wine_quality.csv
 
 # Figures
 report/*.png

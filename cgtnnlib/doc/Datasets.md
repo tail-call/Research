@@ -114,6 +114,8 @@ print(df.sample(n=3).to_markdown())
 - **Признаки:** 20
 - **Задача:** регрессия
 
-## Источники
+Анализ см. в источнике.
+
+## Использованная литература
 
 1. M. Bohanec, V. Rajkovič, *Knowledge acqusition and explanation for multi-attribute decision making*. Proceedings of the 8th International Workshop 'Expert Systems and Their Applications AVIGNON 88', 1:59-78, 1988 (https://kt.ijs.si/MarkoBohanec/pub/Avignon88.pdf)

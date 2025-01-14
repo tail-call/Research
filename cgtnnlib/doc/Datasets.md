@@ -1,10 +1,12 @@
 # Описания датасетов
 
+
 ## 1.  wisc_bc_data.csv
 
 - **Источник:** [UCI Machine Learning Repository | Breast Cancer Wisconsin (Diagnostic)](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
 - **Примеры:** 569
 - **Признаки:** 30
+- **Задача:** классификация
 
 Примеры получены из оцифрованных изображений тонкоигольных аспиратов образований молочной железы. Примеры отражают характеристики клеточных ядер, такие как радиус, текстура, периметр, площадь, гладкость и другие. С каждым примером ассоциирован диагноз, относящий исследованную опухоль к злокачественной (M, 212 примеров) либо к доброкачественной (B, 357 примеров). Простой статистический анализ приведён в таблице 1.1.
 
@@ -35,11 +37,14 @@
 - построены [точечные диаграммы](https://github.com/user-attachments/assets/b395ca8c-4faf-4fa8-b324-73d459f8ad35), показывающие отношения между каждой парой признаков
 
 Возможный источник шума в этом датасете - колонка id, содержащая возрастающие целые числа, никак не влияющие на целевую переменную. В эксперименте это учтено.
+
+
 ## 2. car_evaluation.csv
 
 - **Источник:** [UCI Machine Learning Repository | Car Evaluation](https://archive.ics.uci.edu/dataset/19/car+evaluation)
 - **Примеры:** 1728
 - **Признаки:** 6
+- **Задача:** классификация
 
 Это синтетический датасет, полученный из простой иерархической модели, созданной для демонстрации экспертной системы DECMAK [1]. Датасет моделирует покупателя, выбирающего автомобиль и присваивающего оценку (`good`, `vgood`, `acc`, `unacc`) каждому экземпляру автомобиля в зависимости от стоимости покупки, цены обслуживания, количества дверей и т.д..
 
@@ -69,6 +74,7 @@ print(df.sample(n=3).to_markdown())
 - **Источник:** [Kaggle | Student Performance Factors](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/data)
 - **Примеры:** 6607
 - **Признаки:** 20
+- **Задача:** регрессия
 
 Этот [синтетический](https://www.kaggle.com/datasets/lainguyn123/student-performance-factors/discussion/532279#3001125) датасет моделирует успеваемость учащихся в зависимости от многих факторов: количества часов обучения в неделю, доступ к интернету, тип школы — частная или муниципальная, — пол ученика, доход семьи и других. Целевая переменная — оценка на экзамене.
 
@@ -99,6 +105,14 @@ print(df.sample(n=3).to_markdown())
 |  471 |               6 |           93 | Medium                 | Medium                | No                           |             7 |                52 | High               | Yes               |                   0 | Medium          | Medium            | Public        | Neutral          |                   2 | No                      | College                    | Near                 | Female   |           64 |
 | 5023 |              10 |           66 | Medium                 | Medium                | No                           |             4 |                74 | Low                | Yes               |                   2 | Low             | Medium            | Public        | Negative         |                   2 | No                      | High School                | Moderate             | Male     |           59 |
 |  921 |              14 |           74 | High                   | High                  | Yes                          |             6 |                73 | High               | Yes               |                   2 | Medium          | Medium            | Private       | Neutral          |                   3 | No                      | High School                | Near                 | Female   |           67 |
+
+
+## 4. allhyper
+
+- **Источник:** [PMLB | allhyper](https://epistasislab.github.io/pmlb/profile/allhyper.html)
+- **Примеры:** 3771
+- **Признаки:** 20
+- **Задача:** регрессия
 
 ## Источники
 

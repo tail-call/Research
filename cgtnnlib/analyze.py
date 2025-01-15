@@ -136,7 +136,11 @@ def plot_analysis_fig(
         xlabel = analysis_params['xlabel']
         frac = analysis_params['frac']
         metrics = analysis_params['metrics']
-        fig, axs = plt.subplots(len(metrics), 6, figsize=(24, len(metrics) * 6))
+
+        # Plot grid
+        nrows = len(metrics)
+        ncols = len(pp)
+        fig, axs = plt.subplots(nrows, ncols, figsize=(24, nrows * ncols))
 
         for (i, metric) in enumerate(metrics):
             def make_curve_for_p(p: float) -> pd.DataFrame:
@@ -229,13 +233,13 @@ def analyze_main(
         'dataset_number': dataset.number,
         'xlabel': 'iteration',
         'frac': 1,
-        'metrics': 'loss'
+        'metrics': ['loss'],
     } for dataset in datasets] + [{
         'measurement': 'evaluate',
         'dataset_number': dataset.number,
         'xlabel': 'noise factor',
         'frac': 1,
-        'metrics':  dataset.learning_task.metrics()
+        'metrics':  dataset.learning_task.metrics(),
     } for dataset in datasets]
 
     plot_analysis_fig(

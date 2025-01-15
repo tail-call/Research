@@ -232,7 +232,7 @@ def analyze_main(
         'measurement': 'loss',
         'dataset_number': dataset.number,
         'xlabel': 'iteration',
-        'frac': 1,
+        'frac': 0.01,
         'metrics': ['loss'],
     } for dataset in datasets] + [{
         'measurement': 'evaluate',

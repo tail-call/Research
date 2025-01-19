@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import Callable, Protocol, runtime_checkable
 
 import torch
 
@@ -7,6 +7,9 @@ class NetworkLike(Protocol):
     """
     Protocol for a neural network.
     """
+
+    def __call__(self, *args, **kwds):
+        ...
 
     @property
     def inputs_count(self) -> int:

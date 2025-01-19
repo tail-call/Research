@@ -16,7 +16,6 @@
 import os
 
 from typing import Any
-from typing_extensions import Literal
 
 from IPython.display import clear_output
 
@@ -30,8 +29,8 @@ import torch.nn.functional as F
 
 from sklearn.metrics import roc_auc_score, f1_score, r2_score, mean_squared_error
 
+from cgtnnlib.constants import DRY_RUN, EPOCHS, ITERATIONS, LEARNING_RATE, NOISE_FACTORS, REPORT_DIR
 from cgtnnlib.nn.AugmentedReLUNetwork import AugmentedReLUNetwork
-from cgtnnlib.nn.RegularNetwork import RegularNetwork
 from cgtnnlib.EvaluationParameters import EvaluationParameters
 from cgtnnlib.Report import Report, eval_report_key
 from cgtnnlib.training import create_and_train_all_models
@@ -39,21 +38,6 @@ from cgtnnlib.Dataset import Dataset
 from cgtnnlib.ExperimentParameters import ExperimentParameters
 from cgtnnlib.datasets import datasets
 from cgtnnlib.LearningTask import is_classification_task, is_regression_task
-
-## 1.4.-1 Configuration
-
-DRY_RUN = False
-
-REPORT_DIR = "report/"
-
-ITERATIONS = 10
-EPOCHS = 20
-LEARNING_RATE = 0.00011
-
-NOISE_SAMPLES_COUNT = 50
-NOISE_FACTORS = [
-    x * 2/NOISE_SAMPLES_COUNT for x in range(NOISE_SAMPLES_COUNT)
-]
 
 ## 1.4.-0,5 Initialization
 
@@ -92,11 +76,8 @@ def iterate_experiment_parameters(pp: list[float]):
 
 ## 1.4.11 Evaluation
 
-def positive_probs_from(probs: torch.Tensor) -> np.ndarray[Any, np.dtype[Any]]:
-    return np.array(probs)[:, 0]
-
 def eval_accuracy_f1_rocauc(
-    evaluated_model:RegularNetwork,
+    evaluated_model: torch.nn.Module,
     dataset: Dataset,
     noise_factor: float,
     is_binary_classification: bool,
@@ -137,7 +118,7 @@ def eval_accuracy_f1_rocauc(
 cool_type = np.ndarray[Any, np.dtype[Any]]
 
 def eval_r2_mse(
-    evaluated_model: RegularNetwork,
+    evaluated_model: torch.nn.Module,
     dataset: Dataset,
     noise_factor: float,
 ) -> tuple[float, float]:
@@ -160,8 +141,8 @@ def eval_r2_mse(
 
     return float(r2), float(mse)
 
-def evaluate_regression_model(
-    evaluated_model: RegularNetwork,
+def eval_regression_and_report(
+    evaluated_model: torch.nn.Module,
     dataset: Dataset,
     report_key: str,
 )-> pd.DataFrame:
@@ -185,8 +166,8 @@ def evaluate_regression_model(
 
     return pd.DataFrame(samples)
 
-def evaluate_classification_model(
-    evaluated_model: RegularNetwork,
+def evaluate_classification_and_report(
+    evaluated_model: torch.nn.Module,
     dataset: Dataset,
     report_key: str,
     is_binary_classification: bool,
@@ -214,75 +195,6 @@ def evaluate_classification_model(
 
     return pd.DataFrame(samples)
 
-def plot_evaluation_of_classification(
-    df: pd.DataFrame,
-    accuracy_ax,
-    f1_ax,
-    roc_auc_ax,
-    title: str,
-):
-    accuracy_ax.plot(df['noise_factor'], df['accuracy'], label='Accuracy', marker='o')
-    # accuracy_ax.set_xscale('log')
-    accuracy_ax.set_xlabel('Noise Factor')
-    accuracy_ax.set_ylabel('Metric Value')
-    # ???
-    accuracy_ax.set_title(f'{title}')
-    accuracy_ax.legend()
-    accuracy_ax.grid(True, which="both", ls="--")
-
-    f1_ax.plot(df['noise_factor'], df['f1'], label='F1 Score', marker='o')
-    # f1_ax.set_xscale('log')
-    f1_ax.set_xlabel('Noise Factor')
-    f1_ax.set_ylabel('Metric Value')
-    # ???
-    f1_ax.set_title(f'{title}')
-    f1_ax.legend()
-    f1_ax.grid(True, which="both", ls="--")
-
-    roc_auc_ax.plot(df['noise_factor'], df['roc_auc'], label='ROC AUC', marker='o')
-    # axs[2].set_xscale('log')
-    roc_auc_ax.set_xlabel('Noise Factor')
-    roc_auc_ax.set_ylabel('Metric Value')
-    # ???
-    roc_auc_ax.set_title(f'{title}')
-    roc_auc_ax.legend()
-    roc_auc_ax.grid(True, which="both", ls="--")
-    
-
-def plot_evaluation_of_regression(
-    df: pd.DataFrame,
-    mse_ax,
-    r2_ax,
-    title: str
-):
-    mse_ax.plot(df['noise_factor'], df['mse'], label='Mean Square Error', marker='o')
-    # mse_ax.set_xscale('log')
-    mse_ax.set_xlabel('Noise Factor')
-    mse_ax.set_ylabel('Metric Value')
-    mse_ax.set_title(f'{title}')
-    mse_ax.legend()
-    mse_ax.grid(True, which="both", ls="--")
-
-    r2_ax.plot(df['noise_factor'], df['r2'], label='R^2', marker='o')
-    # r2_ax.set_xscale('log')
-    r2_ax.set_xlabel('Noise Factor')
-    r2_ax.set_ylabel('Metric Value')
-    r2_ax.set_title(f'{title}')
-    r2_ax.legend()
-    r2_ax.grid(True, which="both", ls="--")
-
-def model_path_for(
-    model_a_or_b: Literal["A", "B"],
-    dataset: Dataset,
-    experiment_params: ExperimentParameters,
-):
-    if model_a_or_b == "A":
-        return dataset.model_a_path(experiment_params)
-    elif model_a_or_b == "B":
-        return dataset.model_b_path(experiment_params)
-    else:
-        raise TypeError('model_a_or_b must be A or B')
-
 def eval_inner(
     eval_params: EvaluationParameters,
     experiment_params: ExperimentParameters,
@@ -299,7 +211,7 @@ def eval_inner(
     evaluated_model.load_state_dict(torch.load(eval_params.model_path))
 
     if is_classification_task(eval_params.task):
-        df = evaluate_classification_model(
+        df = evaluate_classification_and_report(
             evaluated_model=evaluated_model,
             dataset=eval_params.dataset,
             report_key=eval_params.report_key,
@@ -308,7 +220,7 @@ def eval_inner(
         print('Evaluation of classification (head):')
         print(df.head())
     elif is_regression_task(eval_params.task):
-        df = evaluate_regression_model(
+        df = eval_regression_and_report(
             evaluated_model=evaluated_model,
             dataset=eval_params.dataset,
             report_key=eval_params.report_key
@@ -323,7 +235,7 @@ def evaluate(
     datasets: list[Dataset]
 ):
     """
-    Оценивает модель `"B"` (`AugmentedReLUNetwork`) согласно параметрам
+    Валидирует модель `"B"` (`AugmentedReLUNetwork`) согласно параметрам
     эксперимента `experiment_params` на наборах данных из `datasets`.
     
     - `constructor` может быть `RegularNetwork` или `AugmentedReLUNetwork`
@@ -333,8 +245,8 @@ def evaluate(
     constructor=AugmentedReLUNetwork
 
     eval_params_items: list[EvaluationParameters] = [EvaluationParameters(
-        dataset,
-        model_path_for('B', dataset, experiment_params),
+        dataset=dataset,
+        model_path=dataset.model_b_path(experiment_params),
         experiment_parameters=experiment_params,
         report_key=eval_report_key(
             model_name=constructor.__name__,
@@ -343,7 +255,6 @@ def evaluate(
             iteration=experiment_params.iteration,
         )
     ) for dataset in datasets]
-    
 
     for (i, eval_params) in enumerate(eval_params_items):
         eval_inner(
@@ -351,6 +262,7 @@ def evaluate(
             experiment_params,
             constructor
         )
+
 
 def train_main(
     pp: list[float],
